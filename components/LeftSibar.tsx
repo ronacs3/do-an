@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { HomeIcon, LayoutGrid, User } from 'lucide-react';
+import { HomeIcon, LayoutGrid, LogOut, User } from 'lucide-react';
 import { useRouter } from 'next/router';
 function HomeSibar() {
     return (
@@ -48,6 +48,9 @@ function UserSibar() {
                 </Link>
                 <Link href={'/User'}>
                     <User className=" text-blue-800" />
+                </Link>
+                <Link href={'/Auth/Sign-out'}>
+                    <LogOut />
                 </Link>
             </div>
         </div>

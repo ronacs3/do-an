@@ -1,9 +1,17 @@
 import Layout from '../../components/Layout';
 import { AirVentIcon, AreaChart, BarChart3, Droplets, Thermometer } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Switch } from 'antd';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 export default function Home() {
+    const router = useRouter();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        if (!token) {
+            router.push('/Auth/Sign-in');
+        }
+    }, []);
     return (
         <Layout>
             <div className="border h-screen">

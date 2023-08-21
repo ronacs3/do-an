@@ -1,7 +1,33 @@
 import Link from 'next/link';
 import { Avatar, Divider } from 'antd';
 import { Settings, BellDot, PanelRight, MapPin } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { getUser } from '../lib/ultis';
+type UserInfo = {
+    id: number;
+    username: string;
+    email: string;
+    fName: string;
+    lName: string;
+    createdAt: string;
+    updatedAt: string;
+};
 export default function RightSidebar() {
+    const [userInfo, setuserInfo] = useState<UserInfo>();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        const Info = async (token: string) => {
+            try {
+                const response = await getUser(token);
+                setuserInfo(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        if (token) {
+            Info(token);
+        }
+    }, []);
     return (
         <div className="border w-2/12 px-6">
             <div className="flex flex-row justify-center py-5 gap-5">
@@ -9,8 +35,8 @@ export default function RightSidebar() {
                     <Avatar style={{ width: 50, height: 50 }} />
                 </div>
                 <div className="text-base">
-                    <div>Username</div>
-                    <div>plan</div>
+                    <div>Username: {userInfo?.username}</div>
+                    <div>Email: {userInfo?.email}</div>
                 </div>
             </div>
             <Divider />

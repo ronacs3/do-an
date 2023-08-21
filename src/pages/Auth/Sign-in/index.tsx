@@ -18,6 +18,7 @@ export default function Signin() {
             router.push('/');
         }
     }, []);
+
     const {
         register,
         handleSubmit,
@@ -36,7 +37,6 @@ export default function Signin() {
                 body: JSON.stringify(e),
             });
             const res = await response.json();
-            console.log(res);
             if (res.success && res.data.access_token) {
                 localStorage.setItem('auth', res.data.access_token);
                 router.push('/');
@@ -63,7 +63,7 @@ export default function Signin() {
                 <div className="flex flex-col gap-1">
                     <label>Password</label>
                     <input
-                        type="text"
+                        type="password"
                         className="border rounded p-1"
                         placeholder="******"
                         required

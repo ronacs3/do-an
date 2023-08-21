@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignUpSchema } from '../../../../validation/schema';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 type SignupDatas = {
     username: string;
     email: string;
@@ -10,19 +12,41 @@ type SignupDatas = {
 };
 
 export default function Signup() {
+    const router = useRouter();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        if (token) {
+            router.push('/');
+        }
+    }, []);
     const {
         register,
         handleSubmit,
         watch,
         formState: { errors },
     } = useForm<SignupDatas>({ resolver: zodResolver(SignUpSchema) });
-    const handleSignIn: SubmitHandler<SignupDatas> = async (e: SignupDatas) => {
+    const handleSignUP: SubmitHandler<SignupDatas> = async (e: SignupDatas) => {
         try {
-        } catch {}
+            const response = await fetch('http://localhost:8080/auth/signup', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(e),
+            });
+            const res = await response.json();
+            if (res?.success) {
+                router.push('/Auth/Sign-in');
+            }
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        }
     };
     return (
         <div className="h-screen grid justify-center items-center bg-slate-50">
-            <form className="border p-20 bg-white" onSubmit={handleSubmit(handleSignIn)}>
+            <form className="border p-20 bg-white" onSubmit={handleSubmit(handleSignUP)}>
                 <div className="flex justify-center pb-3"> Register </div>
                 <div className="flex flex-col gap-1">
                     <label>Username</label>
