@@ -9,7 +9,7 @@ export default function Home() {
     useEffect(() => {
         const token = localStorage.getItem('auth');
         if (!token) {
-            router.push('/Auth/Sign-in');
+            router.push('/');
         }
     }, []);
     return (
