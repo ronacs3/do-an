@@ -67,7 +67,7 @@ const UserChangePassword = () => {
                         />
                         <p className="text-red-600">{errors.newPassword?.message}</p>
                     </div>
-                    <div className="flex gap-3">
+                    <div className=" flex gap-3">
                         <label>ConfirmNewPassword</label>
                         <input
                             type="password"
@@ -76,8 +76,8 @@ const UserChangePassword = () => {
                             {...register('confirmNewPassword')}
                             id="confirmNewPassword"
                         />
-                        <p className="text-red-600">{errors.confirmNewPassword?.message}</p>
                     </div>
+                    <p className="text-red-600">{errors.confirmNewPassword?.message}</p>
                     <div className="flex justify-center">
                         <button type="submit" className="border px-4 py-2 rounded-lg bg-green-200 hover:bg-red-200">
                             Save
@@ -132,14 +132,17 @@ const UserChangeProfile = () => {
                         <label className="pr-z">Email:</label>
                         <input type="text" className="border rounded" {...register('email')} id="email" />
                     </div>
+                    <p className="text-red-600">{errors.email?.message}</p>
                     <div className="flex flex-row gap-2">
                         <label>First Name:</label>
                         <input type="text" className="border rounded" {...register('fName')} id="fName" />
                     </div>
+                    <p className="text-red-600">{errors.fName?.message}</p>
                     <div className="flex flex-row gap-2">
                         <label>Last Name:</label>
                         <input type="text" className="border rounded" {...register('lName')} id="lName" />
                     </div>
+                    <p className="text-red-600">{errors.lName?.message}</p>
                     <div className="flex justify-center">
                         <button type="submit" className="border px-4 py-2 rounded-lg bg-green-200 hover:bg-red-200">
                             Save
