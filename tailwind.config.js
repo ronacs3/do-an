@@ -9,7 +9,18 @@ module.exports = {
         './src/**/*.{js,ts,jsx,tsx,mdx}',
     ],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                robo: ['Roboto', 'sans-serif'],
+                inter: ['Inter', 'sans-serif'],
+                vietnampro: ['Be Vietnam Pro', 'sans-serif'],
+            },
+            padding: {
+                x: '73px',
+                y: '68px',
+                z: '38px',
+            },
+        },
     },
     plugins: [],
 };

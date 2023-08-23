@@ -1,14 +1,18 @@
 import { Divider } from 'antd';
 import Layout from '../../../components/Layout';
-
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ChangePassword } from '../../../validation/schema';
+import { type } from 'os';
+import { UserChangePassword, UserChangeProfile } from '../../../components/User';
 export default function User() {
     return (
         <Layout>
             <div className="h-screen">
-                <div className="h-2/3 border-b-2 flex justify-center">
-                    <div>EDIT PROFILE</div>
-                </div>
-                <div className="h-1/3 flex justify-center">CHANGE PASSWORRD</div>
+                <UserChangeProfile />
+                <UserChangePassword />
             </div>
         </Layout>
     );
