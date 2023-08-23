@@ -1,10 +1,11 @@
 import Layout from '../../components/Layout';
 import { AirVentIcon, AreaChart, BarChart3, Droplets, MonitorSpeaker, Thermometer, Tv } from 'lucide-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Switch } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { AddDevice, Device } from '../../components/Device';
+import { Device } from '../../components/Device';
+import { constants } from 'buffer';
 export default function Home() {
     const router = useRouter();
     useEffect(() => {
@@ -13,6 +14,16 @@ export default function Home() {
             router.push('/Auth/Sign-in');
         }
     }, []);
+    const [device, setDevice] = useState([{ device: '' }]);
+    const handleAddDevice = () => {
+        setDevice([...device, { device: '' }]);
+    };
+    const handleRemoveDevice = (index: number) => {
+        const list = [...device];
+        list.splice(index, 1);
+        setDevice(list);
+    };
+
     return (
         <Layout>
             <div className=" h-screen bg-slate-100">
@@ -55,12 +66,32 @@ export default function Home() {
 
                             <div>Device</div>
                         </div>
-                        <div className="flex flex-row gap-5 pt-5">
-                            <Device />
-                            <div className="border rounded-3xl h-36 w-36 bg-white shadow-sm shadow-slate-600 p-3 ">
-                                1 D
-                            </div>
-                            <AddDevice />
+                        <div className="flex flex-row justify-center gap-5 pt-5">
+                            {device.map((singleDivice, index) => (
+                                <div key={index} className="flex flex-row gap-5">
+                                    <Device />
+                                    <div>
+                                        {device.length !== 1 && (
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveDevice(index)}
+                                                className="remove-btn"
+                                            >
+                                                <span>Remove</span>
+                                            </button>
+                                        )}
+                                    </div>
+                                    {device.length - 1 === index && device.length < 4 && (
+                                        <button
+                                            type="button"
+                                            onClick={handleAddDevice}
+                                            className="border-2 border-dashed rounded-3xl h-36 w-36 bg-white border-black p-"
+                                        >
+                                            <span>Add Device</span>
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
