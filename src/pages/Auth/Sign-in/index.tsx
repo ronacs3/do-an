@@ -46,10 +46,10 @@ export default function Signin() {
         }
     };
     return (
-        <div className="h-screen grid justify-center items-center bg-slate-50">
-            <form className="border p-20 bg-white" onSubmit={handleSubmit(handleSignIn)}>
-                <div className="flex justify-center">LOGIN</div>
-                <div className="flex flex-col gap-1">
+        <div className="h-screen grid justify-center items-center bg-slate-100">
+            <form className="p-20 bg-white" onSubmit={handleSubmit(handleSignIn)}>
+                <div className="flex justify-center pb-5">LOGIN</div>
+                <div className="flex flex-col gap-3">
                     <label>Username</label>
                     <input
                         type="text"
@@ -60,7 +60,7 @@ export default function Signin() {
                     />
                     <p className="text-red-600">{errors.username?.message}</p>
                 </div>
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-3">
                     <label>Password</label>
                     <input
                         type="password"

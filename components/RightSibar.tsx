@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Avatar, Divider } from 'antd';
-import { Settings, BellDot, PanelRight, MapPin } from 'lucide-react';
+import { Settings, BellDot, PanelRight, MapPin, CircuitBoard } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getUser } from '../lib/ultis';
 type UserInfo = {
@@ -45,9 +45,23 @@ export default function RightSidebar() {
                     <MapPin className="pt-1" />
                     <div className=" text-lg">Location</div>
                 </div>
-                <div className="border rounded-2xl bg-gray-700 h-2/3"></div>
+                <div className="border rounded-2xl bg-gray-700 h-5/6"></div>
             </div>
-            <div className="h-1/6"></div>
+            <div className="h-1/6">
+                <div className="flex flex-row pb-2">
+                    <CircuitBoard className="pt-1 pr-1" />
+                    <div className=" text-lg">All Board Location</div>
+                </div>
+                <div className="flex flex-col">
+                    <div>
+                        <div>Board</div>
+                        <div>Location</div>
+                    </div>
+                    <div>asdasd</div>
+                    <div>asdasd</div>
+                    <div>asdasd</div>
+                </div>
+            </div>
         </div>
     );
 }

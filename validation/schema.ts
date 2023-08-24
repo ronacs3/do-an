@@ -23,10 +23,7 @@ const SignInSchema = z.object({
         .min(3, { message: 'Username must be at least 3 characters' })
         .max(20, { message: 'Username must be less than 20 characters' })
         .trim(),
-    password: z
-        .string()
-        .min(6, { message: 'Username must be at least 6 characters' })
-        .max(20, { message: 'Username must be less than 20 characters' }),
+    password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
 });
 const ChangePassword = z
     .object({
