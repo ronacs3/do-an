@@ -66,7 +66,8 @@ export default function Home() {
 
                             <div>Device</div>
                         </div>
-                        <div className="flex flex-row justify-center gap-5 pt-5">
+                        <Device />
+                        {/* <div className="flex flex-row justify-center gap-5 pt-5">
                             {device.map((singleDivice, index) => (
                                 <div key={index} className="flex flex-row gap-5">
                                     <Device />
@@ -92,7 +93,7 @@ export default function Home() {
                                     )}
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
