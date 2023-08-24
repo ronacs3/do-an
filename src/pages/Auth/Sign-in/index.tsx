@@ -79,8 +79,8 @@ export default function Signin() {
                     </Link>
                 </div>
                 <div className=" flex justify-center pt-4">
-                    <button className="border p-1 rounded-lg hover:bg-cyan-300" type="submit">
-                        <div>SIGN IN</div>
+                    <button className="border px-5 py-2 rounded-lg hover:bg-sky-400" type="submit">
+                        <div>Sign In</div>
                     </button>
                 </div>
             </form>

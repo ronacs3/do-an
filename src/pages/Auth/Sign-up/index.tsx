@@ -53,6 +53,7 @@ export default function Signup() {
                     <input
                         type="text"
                         className="border rounded p-1"
+                        placeholder="abcxyz"
                         required
                         {...register('username')}
                         id="username"
@@ -96,7 +97,7 @@ export default function Signup() {
                     <p className="text-red-600">{errors.confirmPassword?.message}</p>
                 </div>
                 <div className=" flex justify-center pt-4">
-                    <button className="border p-1 rounded-lg hover:bg-cyan-300" type="submit">
+                    <button className="border px-5 py-2 rounded-lg hover:bg-sky-400" type="submit">
                         <div>Register</div>
                     </button>
                 </div>

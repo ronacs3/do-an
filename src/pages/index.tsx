@@ -11,7 +11,7 @@ export default function Home() {
     useEffect(() => {
         const token = localStorage.getItem('auth');
         if (!token) {
-            router.push('/Auth/Sign-in');
+            // router.push('/Auth/Sign-in');
         }
     }, []);
     const [device, setDevice] = useState([{ device: '' }]);
@@ -67,33 +67,6 @@ export default function Home() {
                             <div>Device</div>
                         </div>
                         <Device />
-                        {/* <div className="flex flex-row justify-center gap-5 pt-5">
-                            {device.map((singleDivice, index) => (
-                                <div key={index} className="flex flex-row gap-5">
-                                    <Device />
-                                    <div>
-                                        {device.length !== 1 && (
-                                            <button
-                                                type="button"
-                                                onClick={() => handleRemoveDevice(index)}
-                                                className="remove-btn"
-                                            >
-                                                <span>Remove</span>
-                                            </button>
-                                        )}
-                                    </div>
-                                    {device.length - 1 === index && device.length < 4 && (
-                                        <button
-                                            type="button"
-                                            onClick={handleAddDevice}
-                                            className="border-2 border-dashed rounded-3xl h-36 w-36 bg-white border-black p-"
-                                        >
-                                            <span>Add Device</span>
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
-                        </div> */}
                     </div>
                 </div>
             </div>

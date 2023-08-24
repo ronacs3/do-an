@@ -1,8 +1,10 @@
 import Link from 'next/link';
+import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Divider } from 'antd';
-import { Settings, BellDot, PanelRight, MapPin, CircuitBoard } from 'lucide-react';
+import { Settings, BellDot, PanelRight, MapPin, CircuitBoard, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getUser } from '../lib/ultis';
+import { BoardList } from './Board';
 type UserInfo = {
     id: number;
     username: string;
@@ -32,7 +34,7 @@ export default function RightSidebar() {
         <div className="border w-2/12 px-6">
             <div className="flex flex-row justify-center py-5 gap-5">
                 <div className="pr-3">
-                    <Avatar style={{ width: 50, height: 50 }} />
+                    <Avatar size={50} icon={<UserOutlined />} />
                 </div>
                 <div className="text-base">
                     <div>Username: {userInfo?.username}</div>
@@ -52,15 +54,7 @@ export default function RightSidebar() {
                     <CircuitBoard className="pt-1 pr-1" />
                     <div className=" text-lg">All Board Location</div>
                 </div>
-                <div className="flex flex-col">
-                    <div>
-                        <div>Board</div>
-                        <div>Location</div>
-                    </div>
-                    <div>asdasd</div>
-                    <div>asdasd</div>
-                    <div>asdasd</div>
-                </div>
+                <BoardList />
             </div>
         </div>
     );

@@ -36,3 +36,16 @@ export default function BoardItem(): JSX.Element {
         </div>
     );
 }
+
+const BoardList = () => {
+    return (
+        <div className="flex flex-col">
+            <div className="flex flex-row gap-32">
+                <div>Board</div>
+                <div>Location</div>
+            </div>
+        </div>
+    );
+};
+
+export { BoardList };
