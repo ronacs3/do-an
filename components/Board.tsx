@@ -1,10 +1,26 @@
 import { DoorClosed, Droplets, Lightbulb, Thermometer, Tv } from 'lucide-react';
-
-export default function BoardItem(): JSX.Element {
+interface BoardInfo {
+    data: {
+        id: number;
+        boardId: number;
+        shortId: string;
+        name: string;
+        type: string;
+        latitude: string;
+        longitude: string;
+        ownerId: number;
+        createdAt: string;
+        updatedAt: string;
+    };
+}
+export default function BoardItem({ data }: BoardInfo) {
     return (
-        <div className="border rounded-lg h-24 px-10 py-5 flex flex-row bg-white hover:bg-green-200">
-            <div className="w-4/5 ">
-                <div className="pb-2">BOARD 1</div>
+        <div className="border rounded-lg h-24 px-10 py-5 flex flex-row justify-between bg-white hover:bg-green-200">
+            <div className="">
+                <div className="flex flex-row gap-2">
+                    <div className="pb-2">Board: {data.id}</div>
+                    <div> Type: {data.type}</div>
+                </div>
                 <div className="flex flex-row gap-2">
                     <div>
                         <Tv />
@@ -17,8 +33,8 @@ export default function BoardItem(): JSX.Element {
                     </div>
                 </div>
             </div>
-            <div className="w-1/5">
-                <div className="flex flex-row justify-end gap-5 pt-4">
+            <div className="">
+                <div className="flex flex-row justify-end gap-5 pb-2">
                     <div className="flex flex-row gap-1">
                         <div>
                             <Droplets />
@@ -32,17 +48,18 @@ export default function BoardItem(): JSX.Element {
                         <div>30°C</div>
                     </div>
                 </div>
+                <div className="flex  justify-end">Create: {new Date(data.createdAt).toLocaleDateString('en-us')}</div>
             </div>
         </div>
     );
 }
 
-const BoardList = () => {
+const BoardList = ({ data }: BoardInfo) => {
     return (
         <div className="flex flex-col">
             <div className="flex flex-row gap-32">
-                <div>Board</div>
-                <div>Location</div>
+                <div>Board: {data.id}</div>
+                <div>Location: {data.latitude}</div>
             </div>
         </div>
     );

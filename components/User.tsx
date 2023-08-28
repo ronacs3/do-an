@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChangePassword, ChangeProfile } from '../validation/schema';
+import { type, userInfo } from 'os';
+import { useEffect } from 'react';
+import { getUser } from '../lib/ultis';
 type PasswordData = {
     oldPassword: string;
     newPassword: string;
@@ -93,6 +96,7 @@ type ProfileData = {
     fName: string;
     lName: string;
 };
+
 const UserChangeProfile = () => {
     const router = useRouter();
     const [submitForm, setSubmitForm] = useState(false);
@@ -102,6 +106,21 @@ const UserChangeProfile = () => {
         watch,
         formState: { errors },
     } = useForm<ProfileData>({ resolver: zodResolver(ChangeProfile) });
+    const [userInfo, setuserInfo] = useState<ProfileData>();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        const Info = async (token: string) => {
+            try {
+                const response = await getUser(token);
+                setuserInfo(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        if (token) {
+            Info(token);
+        }
+    }, []);
     const handleChangeProfile: SubmitHandler<ProfileData> = async (e: ProfileData) => {
         setSubmitForm(true);
         const token = localStorage.getItem('auth');
@@ -130,17 +149,35 @@ const UserChangeProfile = () => {
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleChangeProfile)}>
                     <div className="flex flex-row gap-2">
                         <label className="pr-z">Email:</label>
-                        <input type="text" className="border rounded" {...register('email')} id="email" />
+                        <input
+                            type="text"
+                            className="border rounded"
+                            placeholder={userInfo?.email}
+                            {...register('email')}
+                            id="email"
+                        />
                     </div>
                     <p className="text-red-600">{errors.email?.message}</p>
                     <div className="flex flex-row gap-2">
                         <label>First Name:</label>
-                        <input type="text" className="border rounded" {...register('fName')} id="fName" />
+                        <input
+                            type="text"
+                            className="border rounded"
+                            placeholder={userInfo?.fName}
+                            {...register('fName')}
+                            id="fName"
+                        />
                     </div>
                     <p className="text-red-600">{errors.fName?.message}</p>
                     <div className="flex flex-row gap-2">
                         <label>Last Name:</label>
-                        <input type="text" className="border rounded" {...register('lName')} id="lName" />
+                        <input
+                            type="text"
+                            className="border rounded"
+                            placeholder={userInfo?.lName}
+                            {...register('lName')}
+                            id="lName"
+                        />
                     </div>
                     <p className="text-red-600">{errors.lName?.message}</p>
                     <div className="flex justify-center">

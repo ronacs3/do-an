@@ -6,12 +6,27 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Device } from '../../components/Device';
 import { constants } from 'buffer';
+import { getBoard } from '../../lib/ultis';
+import { type } from 'os';
+
+type BoardData = {
+    id: number;
+    boardId: number;
+    shortId: string;
+    name: string;
+    type: string;
+    latitude: string;
+    longitude: string;
+    ownerId: number;
+    createdAt: string;
+    updatedAt: string;
+};
 export default function Home() {
     const router = useRouter();
     useEffect(() => {
         const token = localStorage.getItem('auth');
         if (!token) {
-            // router.push('/Auth/Sign-in');
+            router.push('/Auth/Sign-in');
         }
     }, []);
     const [device, setDevice] = useState([{ device: '' }]);
@@ -23,7 +38,22 @@ export default function Home() {
         list.splice(index, 1);
         setDevice(list);
     };
-
+    // const [BoardInfo, setBoardInfo] = useState<BoardData>();
+    // useEffect(() => {
+    //     const token = localStorage.getItem('auth');
+    //     const Info = async (token: string) => {
+    //         try {
+    //             const response = await getBoard(token);
+    //             setBoardInfo(response.data[0]);
+    //             console.log(response.data);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     };
+    //     if (token) {
+    //         Info(token);
+    //     }
+    // }, []);
     return (
         <Layout>
             <div className=" h-screen bg-slate-100">
