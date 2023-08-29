@@ -39,8 +39,7 @@ export default function Layout({ children }: CommonReactProps): JSX.Element {
     return (
         <div>
             {router.pathname === '/User' && <LayoutUser>{children}</LayoutUser>}
-            {router.pathname === '/' && <LayoutDefault>{children}</LayoutDefault>}
-            {router.pathname === '/Board' && <LayoutDefault>{children}</LayoutDefault>}
+            {router.pathname != '/User' && <LayoutDefault>{children}</LayoutDefault>}
         </div>
     );
 }

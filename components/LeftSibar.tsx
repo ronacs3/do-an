@@ -67,3 +67,21 @@ export default function LeftSibar() {
         </>
     );
 }
+const BoardSibarShortId = () => {
+    return (
+        <div className="flex flex-col border place-content-center items-center">
+            <div className="flex flex-col px-8 gap-14">
+                <Link href={'/'}>
+                    <HomeIcon className="opacity-30 hover:text-blue-800 hover:opacity-100" />
+                </Link>
+                <Link href={'/Board'}>
+                    <LayoutGrid className=" text-blue-800" />
+                </Link>
+                <Link href={'/User'}>
+                    <User className=" opacity-30 hover:text-blue-800 hover:opacity-100" />
+                </Link>
+            </div>
+        </div>
+    );
+};
+export { BoardSibarShortId };

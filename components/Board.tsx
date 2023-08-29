@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { DoorClosed, Droplets, Lightbulb, Thermometer, Tv } from 'lucide-react';
 interface BoardInfo {
     data: {
@@ -13,12 +14,16 @@ interface BoardInfo {
         updatedAt: string;
     };
 }
+
 export default function BoardItem({ data }: BoardInfo) {
     return (
-        <div className="border rounded-lg h-24 px-10 py-5 flex flex-row justify-between bg-white hover:bg-green-200">
+        <Link
+            className="border rounded-lg h-24 px-10 py-5 flex flex-row justify-between bg-white hover:bg-green-200"
+            href={`/Board/${data.shortId}`}
+        >
             <div className="">
                 <div className="flex flex-row gap-2">
-                    <div className="pb-2">Board: {data.id}</div>
+                    <div className="pb-2">{data.shortId}</div>
                     <div> Type: {data.type}</div>
                 </div>
                 <div className="flex flex-row gap-2">
@@ -50,7 +55,7 @@ export default function BoardItem({ data }: BoardInfo) {
                 </div>
                 <div className="flex  justify-end">Create: {new Date(data.createdAt).toLocaleDateString('en-us')}</div>
             </div>
-        </div>
+        </Link>
     );
 }
 

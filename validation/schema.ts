@@ -40,4 +40,7 @@ const ChangeProfile = z.object({
     fName: z.string().max(20, { message: 'First name must be less than 20 characters' }),
     lName: z.string().max(20, { message: 'Last name must be less than 20 characters' }),
 });
-export { SignUpSchema, SignInSchema, ChangePassword, ChangeProfile };
+const AssignBoard = z.object({
+    shortId: z.string(),
+});
+export { SignUpSchema, SignInSchema, ChangePassword, ChangeProfile, AssignBoard };
