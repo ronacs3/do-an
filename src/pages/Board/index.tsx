@@ -1,8 +1,9 @@
-import BoardItem from '../../../components/Board';
+import { BoardItem } from '../../../components/Board';
 import Layout from '../../../components/Layout';
 import { Droplets, Thermometer } from 'lucide-react';
 import { getBoard } from '../../../lib/ultis';
 import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 
 type BoardInfo = [
     data: {
@@ -18,7 +19,11 @@ type BoardInfo = [
         updatedAt: string;
     },
 ];
-export default function Board() {
+type SensorData = {
+    temp: string;
+    humi: string;
+};
+export default function Board({}) {
     const [boardInfo, setBoardInfo] = useState<BoardInfo>();
     useEffect(() => {
         const token = localStorage.getItem('auth');
@@ -34,7 +39,15 @@ export default function Board() {
             Info(token);
         }
     }, []);
-    // console.log(boardInfo);
+    const socket = io('http://localhost:8080');
+    const [value, setValue] = useState<SensorData>();
+
+    useEffect(() => {
+        socket.on('/wsn/sensors', (data) => {
+            setValue(data);
+        });
+    }, [socket]);
+    // console.log(value);
     return (
         <Layout>
             <div className="flex justify-center bg-slate-50">
