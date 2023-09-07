@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { DoorClosed, Droplets, Lightbulb, Thermometer, Tv } from 'lucide-react';
+import { useState, useEffect, SetStateAction } from 'react';
+import { io } from 'socket.io-client';
 interface BoardInfo {
     data: {
         id: number;
@@ -14,11 +16,10 @@ interface BoardInfo {
         updatedAt: string;
     };
 }
-
-export default function BoardItem({ data }: BoardInfo) {
+const BoardItem = ({ data }: BoardInfo) => {
     return (
         <Link
-            className="border rounded-lg h-24 px-10 py-5 flex flex-row justify-between bg-white hover:bg-green-200"
+            className="border rounded-lg h-auto px-10 py-5 flex flex-row justify-between bg-white hover:bg-green-200"
             href={`/Board/${data.shortId}`}
         >
             <div className="">
@@ -44,20 +45,20 @@ export default function BoardItem({ data }: BoardInfo) {
                         <div>
                             <Droplets />
                         </div>
-                        <div>50%</div>
+                        {/* <div>{value?.humi}%</div> */}
                     </div>
                     <div className="flex flex-row gap-1">
                         <div>
                             <Thermometer />
                         </div>
-                        <div>30°C</div>
+                        {/* <div>{value?.temp}°C</div> */}
                     </div>
                 </div>
                 <div className="flex  justify-end">Create: {new Date(data.createdAt).toLocaleDateString('en-us')}</div>
             </div>
         </Link>
     );
-}
+};
 
 const BoardList = ({ data }: BoardInfo) => {
     return (
@@ -70,4 +71,4 @@ const BoardList = ({ data }: BoardInfo) => {
     );
 };
 
-export { BoardList };
+export { BoardList, BoardItem };

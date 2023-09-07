@@ -43,4 +43,7 @@ const ChangeProfile = z.object({
 const AssignBoard = z.object({
     shortId: z.string(),
 });
-export { SignUpSchema, SignInSchema, ChangePassword, ChangeProfile, AssignBoard };
+const ChangeBoard = z.object({
+    name: z.string().toLowerCase(),
+});
+export { SignUpSchema, SignInSchema, ChangePassword, ChangeProfile, AssignBoard, ChangeBoard };
