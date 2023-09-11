@@ -19,6 +19,16 @@ type BoardInfo = {
     createdAt: string;
     updatedAt: string;
 };
+type DeviceInfo = {
+    data: {
+        id: number;
+        name: string;
+        type: string;
+        pin: string;
+        state: boolean;
+        boardId: number;
+    };
+};
 type SensorData = {
     temp: string;
     humi: string;
@@ -39,6 +49,7 @@ const formatXAxisTick = (tick: string) => {
 export default function BoardInfo() {
     const router = useRouter();
     const { shortId } = router.query;
+    // BoardInfo
     const [boardInfo, setBoardInfo] = useState<BoardInfo>();
     useEffect(() => {
         const token = localStorage.getItem('auth');
@@ -60,29 +71,58 @@ export default function BoardInfo() {
             Info(token);
         }
     }, []);
+    // devicesInfo
+    const [devicesInfo, setDevicesInfo] = useState<DeviceInfo>();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        const device = async (token: string) => {
+            try {
+                const response = await fetch(`http://localhost:8080/boards/${shortId}/devices`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                setDevicesInfo(data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        if (token) {
+            device(token);
+        }
+    }, []);
+    // socket and chart
+    const desiredBoardID = boardInfo?.id;
     const socket = io('http://localhost:8080');
     const [value, setValue] = useState<SensorData>();
 
     useEffect(() => {
         socket.on('/wsn/sensors', (data) => {
-            setValue(data);
+            if (data.boardId === desiredBoardID) {
+                setValue(data);
+            }
         });
     }, [socket]);
     const [ssData, setData] = useState<any[]>([]);
     useEffect(() => {
         socket.on('/wsn/sensors', (e) => {
-            setData((oldData) => {
-                const newData = [...oldData, e];
-                if (newData.length === 10 + 1) {
-                    return newData.slice(1);
-                }
-                return newData;
-            });
+            if (e.boardId === desiredBoardID) {
+                setData((oldData) => {
+                    const newData = [...oldData, e];
+                    if (newData.length === 10 + 1) {
+                        return newData.slice(1);
+                    }
+                    return newData;
+                });
+            }
         });
         return () => {
             socket.off('/wsn/sensors');
         };
     }, [socket]);
+    console.log(ssData);
     return (
         <div className="flex flex-row w-full h-screen">
             <BoardSibarShortId />
@@ -185,7 +225,19 @@ export default function BoardInfo() {
 
                                 <div>Device</div>
                             </div>
-                            <Device />
+                            <div className="flex flex-row  justify-center gap-5 pt-5">
+                                {/* {devicesInfo?.map((item, idx) => (
+                                    <div key={item.id}>
+                                        {idx === 1 ? <Device data={item} /> : <Device data={item} />}
+                                    </div>
+                                ))} */}
+                                {Array.isArray(devicesInfo) &&
+                                    devicesInfo.map((item, idx) => (
+                                        <div key={item.id}>
+                                            {idx === 1 ? <Device data={item} /> : <Device data={item} />}
+                                        </div>
+                                    ))}
+                            </div>
                         </div>
                     </div>
                 </div>

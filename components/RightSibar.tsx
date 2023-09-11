@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Divider } from 'antd';
-import { Settings, BellDot, PanelRight, MapPin, CircuitBoard, User, PlugZap, Edit } from 'lucide-react';
+import { Settings, BellDot, PanelRight, MapPin, CircuitBoard, User, PlugZap, Edit, PlusCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getUser, getBoard } from '../lib/ultis';
 import { BoardList } from './Board';
@@ -213,6 +213,11 @@ type Board = {
     latitude: string;
     longitude: string;
 };
+type Devices = {
+    name: string;
+    type: string;
+    pin: string;
+};
 const RightSibarShortId = () => {
     const [userInfo, setuserInfo] = useState<UserInfo>();
     useEffect(() => {
@@ -252,7 +257,7 @@ const RightSibarShortId = () => {
         watch,
         formState: { errors },
     } = useForm<Board>({ resolver: zodResolver(ChangeBoard) });
-    const handleChangeProfile: SubmitHandler<Board> = async (e: Board) => {
+    const handleChangeBoard: SubmitHandler<Board> = async (e: Board) => {
         setSubmitForm(true);
         const token = localStorage.getItem('auth');
         const { shortId } = router.query;
@@ -274,6 +279,30 @@ const RightSibarShortId = () => {
             console.log(error);
         }
     };
+    const handleAddDevices = async (e: Devices) => {
+        setSubmitForm(true);
+        const token = localStorage.getItem('auth');
+        const { shortId } = router.query;
+        try {
+            const response = await fetch(`http://localhost:8080/boards/${shortId}/devices`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(e),
+            });
+            const res = await response.json();
+            if (res.success) {
+                router.push('/Board');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const [pin, setPin] = useState();
     return (
         <div className="border w-2/12 px-6">
             <div className="flex flex-row justify-center py-5 gap-5">
@@ -298,7 +327,7 @@ const RightSibarShortId = () => {
                     <Edit className="pt-1" />
                     <div className=" text-lg">Edit Board</div>
                 </div>
-                <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleChangeProfile)}>
+                <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleChangeBoard)}>
                     <div className="flex flex-row gap-2">
                         <label className=" pr-7">Name:</label>
                         <input type="text" className="border rounded" {...register('name')} id="name" />
@@ -320,6 +349,33 @@ const RightSibarShortId = () => {
                     </div>
                 </form>
             </div>
+            {/* <div className="pt-2">
+                <div className="flex flex-row pb-2">
+                    <PlusCircle className="pt-1" />
+                    <div className=" text-lg">Add Devices</div>
+                </div>
+                <form className="flex flex-col gap-4" onSubmit={handleAddDevices}>
+                    <div className="flex flex-row gap-2">
+                        <label className=" pr-7">Name:</label>
+                        <input type="text" className="border rounded" {...register('name')} id="name" />
+                    </div>
+                    <p className="text-red-600">{errors.name?.message}</p>
+                    <div className="flex flex-row gap-2">
+                        <label className=" pr-3">Type:</label>
+                        <input type="text" className="border rounded" id="type" />
+                    </div>
+
+                    <div className="flex flex-row gap-2">
+                        <label>Pin:</label>
+                        <input type="text" className="border rounded" id="pin" />
+                    </div>
+                    <div className="flex justify-center">
+                        <button type="submit" className="border px-4 py-2 rounded-lg bg-green-200 hover:bg-red-200">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div> */}
         </div>
     );
 };

@@ -96,7 +96,7 @@ export default function Home() {
 
                             <div>Device</div>
                         </div>
-                        <Device />
+                        {/* <Device /> */}
                     </div>
                 </div>
             </div>

@@ -16,7 +16,23 @@ interface BoardInfo {
         updatedAt: string;
     };
 }
+type SensorData = {
+    temp: string;
+    humi: string;
+};
+
 const BoardItem = ({ data }: BoardInfo) => {
+    const desiredBoardID = data.id;
+    const socket = io('http://localhost:8080');
+    const [value, setValue] = useState<SensorData>();
+
+    useEffect(() => {
+        socket.on('/wsn/sensors', (data) => {
+            if (data.boardId === desiredBoardID) {
+                setValue(data);
+            }
+        });
+    }, [socket]);
     return (
         <Link
             className="border rounded-lg h-auto px-10 py-5 flex flex-row justify-between bg-white hover:bg-green-200"
@@ -40,18 +56,18 @@ const BoardItem = ({ data }: BoardInfo) => {
                 </div>
             </div>
             <div className="">
-                <div className="flex flex-row justify-end gap-5 pb-2">
-                    <div className="flex flex-row gap-1">
+                <div className="flex flex-row justify-end gap-2 pb-2">
+                    <div className="flex flex-row">
                         <div>
                             <Droplets />
                         </div>
-                        {/* <div>{value?.humi}%</div> */}
+                        <div>{value?.humi}%</div>
                     </div>
-                    <div className="flex flex-row gap-1">
+                    <div className="flex flex-row">
                         <div>
                             <Thermometer />
                         </div>
-                        {/* <div>{value?.temp}°C</div> */}
+                        <div>{value?.temp}°C</div>
                     </div>
                 </div>
                 <div className="flex  justify-end">Create: {new Date(data.createdAt).toLocaleDateString('en-us')}</div>
