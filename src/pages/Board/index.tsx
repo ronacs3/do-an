@@ -47,7 +47,6 @@ export default function Board({}) {
             setValue(data);
         });
     }, [socket]);
-    // console.log(value);
     return (
         <Layout>
             <div className="flex justify-center bg-slate-50">
