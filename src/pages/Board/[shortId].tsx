@@ -3,10 +3,13 @@ import Layout from '../../../components/Layout';
 import { BoardSibarShortId } from '../../../components/LeftSibar';
 import { RightSibarShortId } from '../../../components/RightSibar';
 import { useEffect, useState } from 'react';
-import { AirVentIcon, AreaChart, BarChart3, Droplets, MonitorSpeaker, Thermometer, Tv } from 'lucide-react';
+import { AirVentIcon, AreaChart, BadgePlus, BarChart3, Droplets, MonitorSpeaker, Thermometer, Tv } from 'lucide-react';
 import { Device } from '../../../components/Device';
 import { io } from 'socket.io-client';
 import { ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Button, Modal, Form, Input, Radio } from 'antd';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 type BoardInfo = {
     id: number;
     boardId: number;
@@ -33,6 +36,16 @@ type SensorData = {
     temp: string;
     humi: string;
 };
+interface Devices {
+    name: string;
+    type: string;
+    pin: string;
+}
+
+interface CollectionCreateFormProps {
+    open: boolean;
+    onCancel: () => void;
+}
 
 const formatXAxisTick = (tick: string) => {
     const date = new Date(tick);
@@ -46,6 +59,64 @@ const formatXAxisTick = (tick: string) => {
     });
 };
 
+//Modal Devices
+const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel }) => {
+    const [form] = Form.useForm();
+    const router = useRouter();
+    const { shortId } = router.query;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('auth') : null;
+    return (
+        <Modal
+            open={open}
+            title="Create a new collection"
+            okText="Create"
+            cancelText="Cancel"
+            onCancel={onCancel}
+            onOk={() => {
+                form.validateFields()
+                    .then((values) => {
+                        fetch(`http://localhost:8080/boards/${shortId}/devices`, {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                Authorization: `Bearer ${token}`,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(values),
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                form.resetFields();
+                                onCancel();
+                            })
+                            .then((success) => {
+                                router.reload();
+                            });
+                    })
+                    .catch((info) => {
+                        console.log('Validate Failed:', info);
+                    });
+            }}
+        >
+            <Form form={form} layout="vertical" name="form_in_modal" initialValues={{ modifier: 'public' }}>
+                <Form.Item
+                    name="name"
+                    label="name"
+                    rules={[{ required: true, message: 'Please input the title of collection!' }]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item name="type" label="type">
+                    <Input type="textarea" />
+                </Form.Item>
+                <Form.Item name="pin" label="pin">
+                    <Input type="textarea" />
+                </Form.Item>
+            </Form>
+        </Modal>
+    );
+};
+
 export default function BoardInfo() {
     const router = useRouter();
     const { shortId } = router.query;
@@ -53,46 +124,58 @@ export default function BoardInfo() {
     const [boardInfo, setBoardInfo] = useState<BoardInfo>();
     useEffect(() => {
         const token = localStorage.getItem('auth');
-        const Info = async (token: string) => {
-            try {
-                const response = await fetch(`http://localhost:8080/boards/${shortId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await response.json();
-                setBoardInfo(data.data);
-            } catch (error) {
-                console.log(error);
+        if (router.isReady) {
+            const Info = async (token: string) => {
+                try {
+                    const response = await fetch(`http://localhost:8080/boards/${shortId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    const data = await response.json();
+                    setBoardInfo(data.data);
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            if (token) {
+                Info(token);
             }
-        };
-        if (token) {
-            Info(token);
         }
-    }, []);
+    }, [router.isReady]);
     // devicesInfo
     const [devicesInfo, setDevicesInfo] = useState<DeviceInfo>();
     useEffect(() => {
         const token = localStorage.getItem('auth');
-        const device = async (token: string) => {
-            try {
-                const response = await fetch(`http://localhost:8080/boards/${shortId}/devices`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await response.json();
-                setDevicesInfo(data.data);
-            } catch (error) {
-                console.log(error);
+        if (router.isReady) {
+            const device = async (token: string) => {
+                try {
+                    const response = await fetch(`http://localhost:8080/boards/${shortId}/devices`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    const data = await response.json();
+                    setDevicesInfo(data.data);
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            if (token) {
+                device(token);
             }
-        };
-        if (token) {
-            device(token);
         }
-    }, []);
+    }, [router.isReady]);
+    // add device
+    const [open, setOpen] = useState(false);
+    const showModal = () => {
+        setOpen(true);
+    };
+    const handleCanle = () => {
+        setOpen(false);
+    };
     // socket and chart
     const desiredBoardID = boardInfo?.id;
     const socket = io('http://localhost:8080');
@@ -122,7 +205,6 @@ export default function BoardInfo() {
             socket.off('/wsn/sensors');
         };
     }, [socket]);
-    console.log(ssData);
     return (
         <div className="flex flex-row w-full h-screen">
             <BoardSibarShortId />
@@ -224,13 +306,53 @@ export default function BoardInfo() {
                                 </div>
 
                                 <div>Device</div>
+                                <button className="font-inter" onClick={showModal}>
+                                    <BadgePlus />
+                                </button>
+                                <CollectionCreateForm
+                                    open={open}
+                                    onCancel={() => {
+                                        setOpen(false);
+                                    }}
+                                />
+                                {/* <Modal
+                                    open={open}
+                                    title="Thêm thiết bị cho board"
+                                    onCancel={handleCanle}
+                                    footer={[
+                                        <Button key="submit" type="primary" htmlType="submit" form="myForm">
+                                            Add Device
+                                        </Button>,
+                                        <Button key="back" onClick={handleCanle}>
+                                            Back
+                                        </Button>,
+                                    ]}
+                                >
+                                    <form
+                                        id="myForm"
+                                        onSubmit={handleSubmit(handleAddDevice)}
+                                        className="grid grid-cols-2 gap-2 py-2"
+                                    >
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex flex-row gap-2">
+                                                <label className=" pr-7">Name:</label>
+                                                <input type="text" className="border rounded" name="name" />
+                                            </div>
+
+                                            <div className="flex flex-row gap-2">
+                                                <label className=" pr-3">Type:</label>
+                                                <input type="text" className="border rounded" name="type" />
+                                            </div>
+
+                                            <div className="flex flex-row gap-2">
+                                                <label>Pin:</label>
+                                                <input type="text" className="border rounded" name="pin" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </Modal> */}
                             </div>
                             <div className="flex flex-row  justify-center gap-5 pt-5">
-                                {/* {devicesInfo?.map((item, idx) => (
-                                    <div key={item.id}>
-                                        {idx === 1 ? <Device data={item} /> : <Device data={item} />}
-                                    </div>
-                                ))} */}
                                 {Array.isArray(devicesInfo) &&
                                     devicesInfo.map((item, idx) => (
                                         <div key={item.id}>

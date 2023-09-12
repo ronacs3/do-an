@@ -22,7 +22,7 @@ const Device = ({ data }: device) => {
         setOpen(false);
     };
     const { shortId } = router.query;
-
+    // remove device
     const handleSubmit = async (event: { preventDefault: () => void }) => {
         event.preventDefault();
         const token = localStorage.getItem('auth');
@@ -49,18 +49,19 @@ const Device = ({ data }: device) => {
     return (
         <div className="flex flex-row justify-center gap-5 pt-5">
             <div className="flex flex-row gap-5">
-                <div className="border rounded-3xl h-36 w-36 shadow-sm shadow-slate-600 bg-red-400 p-3">
-                    <div className="flex flex-row gap-12 pb-11 ">
-                        <div>
-                            <Tv />
-                        </div>
+                <div className="border rounded-3xl h-36 w-36 shadow-sm shadow-slate-600 bg-slate-50 p-3">
+                    <div className="flex flex-row gap-9 pb-12">
+                        <div>{data.name}</div>
                         <div>
                             <Switch />
                         </div>
                     </div>
-                    <button className="font-inter" onClick={showModal}>
-                        {data.name}
-                    </button>
+                    <div className="flex flex-row  gap-12 ">
+                        <button className="font-inter " onClick={showModal}>
+                            {data.pin}
+                        </button>
+                        <div className="pb-1">{data.type}</div>
+                    </div>
                     <Modal
                         open={open}
                         title="thong tin device"
