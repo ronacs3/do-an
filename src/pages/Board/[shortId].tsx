@@ -7,9 +7,12 @@ import { AirVentIcon, AreaChart, BadgePlus, BarChart3, Droplets, MonitorSpeaker,
 import { Device } from '../../../components/Device';
 import { io } from 'socket.io-client';
 import { ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { Button, Modal, Form, Input, Radio } from 'antd';
+import { Button, Modal, Form, Input, Select } from 'antd';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+
+// type DeviceType = 'TV' | 'DOOR' | 'BULB' | 'AC' | 'FAN' | 'OTHER';
+type DevicePin = 'D1' | 'D2' | 'D3' | 'D4';
 type BoardInfo = {
     id: number;
     boardId: number;
@@ -36,17 +39,19 @@ type SensorData = {
     temp: string;
     humi: string;
 };
-interface Devices {
+interface AddDevices {
     name: string;
-    type: string;
-    pin: string;
+    // type?: DeviceType;
+    pin?: DevicePin;
 }
 
-interface CollectionCreateFormProps {
+interface AddDevicesProps {
     open: boolean;
+    value?: AddDevices;
     onCancel: () => void;
+    onChange?: (value: AddDevices) => void;
 }
-
+const { Option } = Select;
 const formatXAxisTick = (tick: string) => {
     const date = new Date(tick);
     return date.toLocaleString('vi-VN', {
@@ -60,16 +65,17 @@ const formatXAxisTick = (tick: string) => {
 };
 
 //Modal Devices
-const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({ open, onCancel }) => {
+const AddDevices: React.FC<AddDevicesProps> = ({ open, onCancel, value = {}, onChange }) => {
     const [form] = Form.useForm();
     const router = useRouter();
     const { shortId } = router.query;
     const token = typeof window !== 'undefined' ? localStorage.getItem('auth') : null;
+
     return (
         <Modal
             open={open}
-            title="Create a new collection"
-            okText="Create"
+            title="Thêm thiết bị"
+            okText="Add Device"
             cancelText="Cancel"
             onCancel={onCancel}
             onOk={() => {
@@ -97,20 +103,29 @@ const CollectionCreateForm: React.FC<CollectionCreateFormProps> = ({ open, onCan
                         console.log('Validate Failed:', info);
                     });
             }}
+            width={400}
         >
-            <Form form={form} layout="vertical" name="form_in_modal" initialValues={{ modifier: 'public' }}>
-                <Form.Item
-                    name="name"
-                    label="name"
-                    rules={[{ required: true, message: 'Please input the title of collection!' }]}
-                >
+            <Form form={form} layout="vertical" name="form_in_modal">
+                <Form.Item name="name" label="name">
                     <Input />
                 </Form.Item>
                 <Form.Item name="type" label="type">
-                    <Input type="textarea" />
+                    <Select placeholder="select your type">
+                        <Option value="TV">TV</Option>
+                        <Option value="DOOR">DOOR</Option>
+                        <Option value="BULB">BULB</Option>
+                        <Option value="AC">AC</Option>
+                        <Option value="FAN">FAN</Option>
+                        <Option value="OTHER">Other</Option>
+                    </Select>
                 </Form.Item>
                 <Form.Item name="pin" label="pin">
-                    <Input type="textarea" />
+                    <Select placeholder="select your pin">
+                        <Option value="D1">D1</Option>
+                        <Option value="D2">D2</Option>
+                        <Option value="D3">D3</Option>
+                        <Option value="D4">D4</Option>
+                    </Select>
                 </Form.Item>
             </Form>
         </Modal>
@@ -309,54 +324,22 @@ export default function BoardInfo() {
                                 <button className="font-inter" onClick={showModal}>
                                     <BadgePlus />
                                 </button>
-                                <CollectionCreateForm
+                                <AddDevices
                                     open={open}
                                     onCancel={() => {
                                         setOpen(false);
                                     }}
                                 />
-                                {/* <Modal
-                                    open={open}
-                                    title="Thêm thiết bị cho board"
-                                    onCancel={handleCanle}
-                                    footer={[
-                                        <Button key="submit" type="primary" htmlType="submit" form="myForm">
-                                            Add Device
-                                        </Button>,
-                                        <Button key="back" onClick={handleCanle}>
-                                            Back
-                                        </Button>,
-                                    ]}
-                                >
-                                    <form
-                                        id="myForm"
-                                        onSubmit={handleSubmit(handleAddDevice)}
-                                        className="grid grid-cols-2 gap-2 py-2"
-                                    >
-                                        <div className="flex flex-col gap-4">
-                                            <div className="flex flex-row gap-2">
-                                                <label className=" pr-7">Name:</label>
-                                                <input type="text" className="border rounded" name="name" />
-                                            </div>
-
-                                            <div className="flex flex-row gap-2">
-                                                <label className=" pr-3">Type:</label>
-                                                <input type="text" className="border rounded" name="type" />
-                                            </div>
-
-                                            <div className="flex flex-row gap-2">
-                                                <label>Pin:</label>
-                                                <input type="text" className="border rounded" name="pin" />
-                                            </div>
-                                        </div>
-                                    </form>
-                                </Modal> */}
                             </div>
                             <div className="flex flex-row  justify-center gap-5 pt-5">
                                 {Array.isArray(devicesInfo) &&
                                     devicesInfo.map((item, idx) => (
                                         <div key={item.id}>
-                                            {idx === 1 ? <Device data={item} /> : <Device data={item} />}
+                                            {idx === 1 ? (
+                                                <Device data={item} id={item.id} />
+                                            ) : (
+                                                <Device data={item} id={item.id} />
+                                            )}
                                         </div>
                                     ))}
                             </div>
