@@ -1,4 +1,3 @@
-import { Tv } from 'lucide-react';
 import { Button, Modal, Switch, Form, Input, Select } from 'antd';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -115,8 +114,11 @@ const Device = ({ data, id }: device) => {
     };
     const { shortId } = router.query;
     //state devices
+
     const socket = io('http://localhost:8080');
+    const [active, setActive] = useState(data.state);
     const handleDevice = async () => {
+        setActive(!active);
         const token = localStorage.getItem('auth');
         const newState = !data.state;
 
@@ -132,6 +134,7 @@ const Device = ({ data, id }: device) => {
             });
 
             const res = await response.json();
+
             if (res.success) {
                 data.state = newState;
                 let message = {
@@ -172,11 +175,7 @@ const Device = ({ data, id }: device) => {
     return (
         <div className="flex flex-row justify-center gap-5 pt-5">
             <div className="flex flex-row gap-5">
-                <div
-                    className={`border rounded-3xl h-36 w-36 shadow-sm shadow-slate-600 p-3 ${
-                        data.state ? 'bg-green-600' : 'bg-red-600'
-                    } `}
-                >
+                <div className={`border rounded-3xl h-36 w-36 shadow-sm shadow-slate-600 p-3 `}>
                     <div className="flex flex-row gap-7 pb-12">
                         <button onClick={showModal2}>{data.name}</button>
                         <EditDevices
@@ -187,7 +186,12 @@ const Device = ({ data, id }: device) => {
                             data={data}
                         />
                         <div>
-                            <Switch checkedChildren="ON" unCheckedChildren="OFF" onChange={handleDevice} />
+                            <Switch
+                                checkedChildren="ON"
+                                unCheckedChildren="OFF"
+                                onChange={handleDevice}
+                                checked={active}
+                            />
                         </div>
                     </div>
                     <div className="flex flex-row  gap-12 ">

@@ -70,7 +70,33 @@ const AddDevices: React.FC<AddDevicesProps> = ({ open, onCancel, value = {}, onC
     const router = useRouter();
     const { shortId } = router.query;
     const token = typeof window !== 'undefined' ? localStorage.getItem('auth') : null;
-
+    const pin = ['D1', 'D2', 'D3', 'D4'];
+    const [devicesInfo, setDevicesInfo] = useState<DeviceInfo>();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        if (router.isReady) {
+            const device = async (token: string) => {
+                try {
+                    const response = await fetch(`http://localhost:8080/boards/${shortId}/devices`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    const data = await response.json();
+                    setDevicesInfo(data.data);
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            if (token) {
+                device(token);
+            }
+        }
+    }, [router.isReady]);
+    //check usePin
+    const pinUsed = Array.isArray(devicesInfo) ? devicesInfo.map((item) => item.pin) : [];
+    const pinAvailable = pin.filter((pin) => !pinUsed.some((usedPin) => usedPin === pin));
     return (
         <Modal
             open={open}
@@ -121,10 +147,16 @@ const AddDevices: React.FC<AddDevicesProps> = ({ open, onCancel, value = {}, onC
                 </Form.Item>
                 <Form.Item name="pin" label="pin">
                     <Select placeholder="select your pin">
-                        <Option value="D1">D1</Option>
-                        <Option value="D2">D2</Option>
-                        <Option value="D3">D3</Option>
-                        <Option value="D4">D4</Option>
+                        {pinAvailable.map((pin) => (
+                            <Option key={pin} value={pin}>
+                                {pin}
+                            </Option>
+                        ))}
+                        {pinUsed.map((pin) => (
+                            <Option key={pin} value={pin} disabled>
+                                {pin}
+                            </Option>
+                        ))}
                     </Select>
                 </Form.Item>
             </Form>
