@@ -104,6 +104,7 @@ const AddDevices: React.FC<AddDevicesProps> = ({ open, onCancel, value = {}, onC
             okText="Add Device"
             cancelText="Cancel"
             onCancel={onCancel}
+            okType="dashed"
             onOk={() => {
                 form.validateFields()
                     .then((values) => {
@@ -285,7 +286,7 @@ export default function BoardInfo() {
                                 <BarChart3 className="pt-1" />
                                 <div className=" text-lg">Chart</div>
                             </div>
-                            <div className="border rounded-lg h-5/6 bg-slate-500">
+                            <div className="border rounded-lg h-5/6 bg-slate-300">
                                 <ResponsiveContainer>
                                     <ComposedChart
                                         data={ssData}

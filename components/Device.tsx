@@ -36,10 +36,11 @@ const EditDevices: React.FC<CollectionCreateFormProps> = ({ open, onCancel, data
     return (
         <Modal
             open={open}
-            title="Thêm thiết bị"
+            title="Sửa thông tin thiết bị"
             okText="Add Device"
             cancelText="Cancel"
             onCancel={onCancel}
+            okType="dashed"
             onOk={() => {
                 form.validateFields()
                     .then((values) => {
@@ -175,7 +176,7 @@ const Device = ({ data, id }: device) => {
     return (
         <div className="flex flex-row justify-center gap-5 pt-5">
             <div className="flex flex-row gap-5">
-                <div className={`border rounded-3xl h-36 w-36 shadow-sm shadow-slate-600 p-3 `}>
+                <div className={`border rounded-3xl h-36 w-36 shadow-sm bg shadow-slate-600 p-3 `}>
                     <div className="flex flex-row gap-7 pb-12">
                         <button onClick={showModal2}>{data.name}</button>
                         <EditDevices

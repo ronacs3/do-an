@@ -3,6 +3,7 @@ import { CommonReactProps } from '../types/common';
 import LeftSibar from './LeftSibar';
 import RightSidebar from './RightSibar';
 import { useRouter } from 'next/router';
+import { ConfigProvider } from 'antd';
 
 function LayoutDefault({ children }: CommonReactProps): JSX.Element {
     return (
@@ -38,8 +39,19 @@ export default function Layout({ children }: CommonReactProps): JSX.Element {
     const router = useRouter();
     return (
         <div>
-            {router.pathname === '/User' && <LayoutUser>{children}</LayoutUser>}
-            {router.pathname != '/User' && <LayoutDefault>{children}</LayoutDefault>}
+            <ConfigProvider
+                theme={{
+                    components: {
+                        Button: {
+                            colorPrimary: '#00b96b',
+                            algorithm: true,
+                        },
+                    },
+                }}
+            >
+                {router.pathname === '/User' && <LayoutUser>{children}</LayoutUser>}
+                {router.pathname != '/User' && <LayoutDefault>{children}</LayoutDefault>}
+            </ConfigProvider>
         </div>
     );
 }
