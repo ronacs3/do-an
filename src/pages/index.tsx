@@ -23,12 +23,12 @@ type BoardData = {
 };
 export default function Home() {
     const router = useRouter();
-    useEffect(() => {
-        const token = localStorage.getItem('auth');
-        if (!token) {
-            router.push('/Auth/Sign-in');
-        }
-    }, []);
+    // useEffect(() => {
+    //     const token = localStorage.getItem('auth');
+    //     if (!token) {
+    //         router.push('/Auth/Sign-in');
+    //     }
+    // }, []);
     const [device, setDevice] = useState([{ device: '' }]);
     const handleAddDevice = () => {
         setDevice([...device, { device: '' }]);

@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import input from 'antd/es/input';
+import toast, { Toaster } from 'react-hot-toast';
 
 type UserInfo = {
     id: number;
@@ -72,7 +73,13 @@ const RightSibarBoard = () => {
         event.preventDefault();
         const token = localStorage.getItem('auth');
         const url = `http://localhost:8080/boards/${shortId}/assign`;
-
+        const signInToast = toast.loading('Assign board...', {
+            style: {
+                borderRadius: '8px',
+                background: '#333',
+                color: '#fff',
+            },
+        });
         try {
             const response = await fetch(url, {
                 method: 'GET',
@@ -83,6 +90,14 @@ const RightSibarBoard = () => {
             });
 
             if (response.ok) {
+                toast.success('Assign board, redirect...', {
+                    id: signInToast,
+                    style: {
+                        borderRadius: '8px',
+                        background: '#333',
+                        color: '#fff',
+                    },
+                });
                 router.reload();
             } else {
                 console.log('Request failed:', response.status, response.statusText);
@@ -92,58 +107,61 @@ const RightSibarBoard = () => {
         }
     };
     return (
-        <div className="border w-2/12 px-6">
-            <div className="flex flex-row justify-center py-5 gap-5">
-                <div className="pr-3">
-                    <Avatar size={50} icon={<UserOutlined />} />
-                </div>
-                <div className="text-base">
-                    <div>Username: {userInfo?.username}</div>
-                    <div>Email: {userInfo?.email}</div>
-                </div>
-            </div>
-            <Divider />
-            <div className="h-2/6">
-                <div className="flex flex-row pb-2">
-                    <MapPin className="pt-1" />
-                    <div className=" text-lg">Location</div>
-                </div>
-                <div className="border rounded-2xl bg-gray-700 h-5/6"></div>
-            </div>
-            <div className="pb-3">
-                <div className="flex flex-row gap-1">
-                    <div>
-                        <PlugZap />
+        <>
+            <Toaster position="top-center" reverseOrder={false} />
+            <div className="border w-2/12 px-6">
+                <div className="flex flex-row justify-center py-5 gap-5">
+                    <div className="pr-3">
+                        <Avatar size={50} icon={<UserOutlined />} />
                     </div>
-                    <div className="pt-1"> Assign Board</div>
-                </div>
-                <form className="flex flex-col gap-2 pt-1" onSubmit={handleSubmit}>
-                    <label htmlFor="shortId">Board ShortId : </label>
-                    <input
-                        className="border w-full rounded"
-                        name="shortId"
-                        type="text"
-                        id="shortId"
-                        value={shortId}
-                        onChange={(e) => setShortId(e.target.value)}
-                    />
-                    <div className="flex justify-center">
-                        <button className="border rounded-sm p-1 bg-slate-200 hover:bg-lime-200" type="submit">
-                            Assign
-                        </button>
+                    <div className="text-base">
+                        <div>Username: {userInfo?.username}</div>
+                        <div>Email: {userInfo?.email}</div>
                     </div>
-                </form>
-            </div>
-            <div className="">
-                <div className="flex flex-row pb-2">
-                    <CircuitBoard className="pt-1 pr-1" />
-                    <div className=" text-lg">All Board Location</div>
                 </div>
-                {boardInfo?.map((item, idx) => (
-                    <div key={item.id}>{idx === 1 ? <BoardList data={item} /> : <BoardList data={item} />}</div>
-                ))}
+                <Divider />
+                <div className="h-2/6">
+                    <div className="flex flex-row pb-2">
+                        <MapPin className="pt-1" />
+                        <div className=" text-lg">Location</div>
+                    </div>
+                    <div className="border rounded-2xl bg-gray-700 h-5/6"></div>
+                </div>
+                <div className="pb-3">
+                    <div className="flex flex-row gap-1">
+                        <div>
+                            <PlugZap />
+                        </div>
+                        <div className="pt-1"> Assign Board</div>
+                    </div>
+                    <form className="flex flex-col gap-2 pt-1" onSubmit={handleSubmit}>
+                        <label htmlFor="shortId">Board ShortId : </label>
+                        <input
+                            className="border w-full rounded"
+                            name="shortId"
+                            type="text"
+                            id="shortId"
+                            value={shortId}
+                            onChange={(e) => setShortId(e.target.value)}
+                        />
+                        <div className="flex justify-center">
+                            <button className="border rounded-sm p-1 bg-slate-200 hover:bg-lime-200" type="submit">
+                                Assign
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div className="">
+                    <div className="flex flex-row pb-2">
+                        <CircuitBoard className="pt-1 pr-1" />
+                        <div className=" text-lg">All Board Location</div>
+                    </div>
+                    {boardInfo?.map((item, idx) => (
+                        <div key={item.id}>{idx === 1 ? <BoardList data={item} /> : <BoardList data={item} />}</div>
+                    ))}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 const RightSibarHome = () => {
