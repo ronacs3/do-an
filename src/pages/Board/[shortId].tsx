@@ -38,6 +38,7 @@ type DeviceInfo = {
 type SensorData = {
     temp: string;
     humi: string;
+    lux: string;
 };
 interface AddDevices {
     name: string;
@@ -276,6 +277,12 @@ export default function BoardInfo() {
                                     </div>
                                     <div>{value?.temp}°C</div>
                                 </div>
+                                <div className="flex flex-row gap-1">
+                                    <div>
+                                        <Thermometer />
+                                    </div>
+                                    <div>{value?.lux}LUX</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -339,6 +346,13 @@ export default function BoardInfo() {
                                             dataKey="temp"
                                             type={'monotone'}
                                             stroke="#fc3903"
+                                            strokeWidth={2}
+                                            yAxisId={'left'}
+                                        ></Line>
+                                        <Line
+                                            dataKey="lux"
+                                            type={'monotone'}
+                                            stroke="#fcba03"
                                             strokeWidth={2}
                                             yAxisId={'left'}
                                         ></Line>
