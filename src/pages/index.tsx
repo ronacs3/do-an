@@ -123,7 +123,7 @@ export default function Home() {
                                     <YAxis
                                         yAxisId={'left'}
                                         label={{
-                                            value: 'Temp/Humi',
+                                            value: 'Temp/Humi/Lux',
                                             angle: -90,
                                             position: 'insideLeft',
                                             fill: '#f7fafc',

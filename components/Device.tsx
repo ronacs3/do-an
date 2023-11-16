@@ -1,8 +1,10 @@
-import { Button, Modal, Switch, Form, Input, Select } from 'antd';
+import { Button, Modal, Switch, Form, Input, Select, TimePicker } from 'antd';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { io } from 'socket.io-client';
 import { date } from 'zod';
+import { LampCeiling } from 'lucide-react';
+import dayjs from 'dayjs';
 
 interface device {
     data: {
@@ -37,7 +39,7 @@ const EditDevices: React.FC<CollectionCreateFormProps> = ({ open, onCancel, data
         <Modal
             open={open}
             title="Sửa thông tin thiết bị"
-            okText="Add Device"
+            okText="Change Device"
             cancelText="Cancel"
             onCancel={onCancel}
             okType="dashed"
@@ -173,60 +175,102 @@ const Device = ({ data, id }: device) => {
             console.error('An error occurred:', error);
         }
     };
+    const format = 'HH:mm';
+
     return (
-        <div className="flex flex-row justify-center gap-5 pt-5">
-            <div className="flex flex-row gap-5">
-                <div className={`border rounded-3xl h-36 w-36 shadow-sm bg shadow-slate-600 p-3 `}>
-                    <div className="flex flex-row gap-7 pb-12">
-                        <button onClick={showModal2}>{data.name}</button>
-                        <EditDevices
-                            open={open2}
-                            onCancel={() => {
-                                setOpen2(false);
-                            }}
-                            data={data}
-                        />
-                        <div>
-                            <Switch
-                                checkedChildren="ON"
-                                unCheckedChildren="OFF"
-                                onChange={handleDevice}
-                                checked={active}
-                            />
-                        </div>
+        <div className="h-56 rounded-lg pt-7 px-5 bg-slate-700">
+            <div className="flex flex-row gap-2 pb-24 w-full">
+                <div>
+                    <button onClick={showModal2}>{data.name}</button>
+                    <EditDevices
+                        open={open2}
+                        onCancel={() => {
+                            setOpen2(false);
+                        }}
+                        data={data}
+                    />
+                </div>
+                <div className="w-full flex flex-row place-content-end">
+                    <Switch checkedChildren="ON" unCheckedChildren="OFF" onChange={handleDevice} checked={active} />
+                </div>
+            </div>
+            <div className="flex flex-row gap-6 w-full">
+                <div className="pt-1 flex flex-row w-full">
+                    <button className="font-inter " onClick={showModal}>
+                        Pin: {data.pin}
+                    </button>
+                </div>
+                <Modal
+                    open={open}
+                    title="thong tin device"
+                    onCancel={handleCanle}
+                    footer={[
+                        <Button key="submit" danger type="primary" onClick={handleSubmit}>
+                            Remove
+                        </Button>,
+                        <Button key="back" onClick={handleCanle}>
+                            Back
+                        </Button>,
+                    ]}
+                >
+                    <div className="grid grid-cols-2 gap-2 py-2">
+                        <div>ID: {data.id}</div>
+                        <div>Name : {data.name}</div>
+                        <div>Type : {data.type}</div>
+                        <div>Pin : {data.pin}</div>
+                        <div>Board : {data.boardId}</div>
+                        <div>Time Create : 20/08/2023</div>
                     </div>
-                    <div className="flex flex-row  gap-12 ">
-                        <button className="font-inter " onClick={showModal}>
-                            {data.pin}
-                        </button>
-                        <div className="pb-1">{data.type}</div>
-                    </div>
-                    <Modal
-                        open={open}
-                        title="thong tin device"
-                        onCancel={handleCanle}
-                        footer={[
-                            <Button key="submit" danger type="primary" onClick={handleSubmit}>
-                                Remove
-                            </Button>,
-                            <Button key="back" onClick={handleCanle}>
-                                Back
-                            </Button>,
-                        ]}
-                    >
-                        <div className="grid grid-cols-2 gap-2 py-2">
-                            <div>ID: {data.id}</div>
-                            <div>Name : {data.name}</div>
-                            <div>Type : {data.type}</div>
-                            <div>Pin : {data.pin}</div>
-                            <div>Board : {data.boardId}</div>
-                            <div>Time Create : 20/08/2023</div>
-                        </div>
-                    </Modal>
-                    <div className="font-inter">{data.state}</div>
+                </Modal>
+                <div className="w-full flex flex-row place-content-end">
+                    <TimePicker defaultValue={dayjs('00:00', format)} format={format} />
                 </div>
             </div>
         </div>
+        // <div className="flex flex-row gap-5 w-60 h-56 rounded-lg bg-slate-700">
+        //     <div className="flex flex-row gap-2 pb-12">
+        //         <button onClick={showModal2}>{data.name}</button>
+        //         <EditDevices
+        //             open={open2}
+        //             onCancel={() => {
+        //                 setOpen2(false);
+        //             }}
+        //             data={data}
+        //         />
+        //         <div>
+        //             <Switch checkedChildren="ON" unCheckedChildren="OFF" onChange={handleDevice} checked={active} />
+        //         </div>
+        //     </div>
+        //     <div className="flex flex-row  gap-12 ">
+        // <button className="font-inter " onClick={showModal}>
+        //     {data.pin}
+        // </button>
+        // <div className="pb-1">{data.type}</div>
+        //     </div>
+        // <Modal
+        //     open={open}
+        //     title="thong tin device"
+        //     onCancel={handleCanle}
+        //     footer={[
+        //         <Button key="submit" danger type="primary" onClick={handleSubmit}>
+        //             Remove
+        //         </Button>,
+        //         <Button key="back" onClick={handleCanle}>
+        //             Back
+        //         </Button>,
+        //     ]}
+        // >
+        //         <div className="grid grid-cols-2 gap-2 py-2">
+        //             <div>ID: {data.id}</div>
+        //             <div>Name : {data.name}</div>
+        //             <div>Type : {data.type}</div>
+        //             <div>Pin : {data.pin}</div>
+        //             <div>Board : {data.boardId}</div>
+        //             <div>Time Create : 20/08/2023</div>
+        //         </div>
+        //     </Modal>
+        //     <div className="font-inter">{data.state}</div>
+        // </div>
     );
 };
 

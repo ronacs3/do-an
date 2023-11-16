@@ -269,15 +269,15 @@ export default function BoardInfo() {
                         <div className="flex flex-row justify-center gap-11 ">
                             <div className="rounded w-60 h-28 flex flex-col items-center bg-slate-700 gap-3 ">
                                 <div className="pt-4 font-normal text-xl">Temperatute</div>
-                                <div className="font-normal text-4xl">{formatString(value?.temp)}%</div>
+                                <div className="font-normal text-4xl">{formatString(value?.temp)} °C</div>
                             </div>
                             <div className="rounded w-60 h-28  flex flex-col items-center bg-slate-700 gap-3 ">
                                 <div className="pt-4 font-normal text-xl">Humidity</div>
-                                <div className="font-normal text-4xl">{formatString(value?.humi)}%</div>
+                                <div className="font-normal text-4xl">{formatString(value?.humi)} %</div>
                             </div>
                             <div className="rounded w-60 h-28  flex flex-col items-center bg-slate-700 gap-3 ">
                                 <div className="pt-4 font-normal text-xl">Lux</div>
-                                <div className="font-normal text-4xl">{formatString(value?.lux)}Lux</div>
+                                <div className="font-normal text-4xl">{formatString(value?.lux)} Lux</div>
                             </div>
                         </div>
                         {/* Chart */}
@@ -312,7 +312,7 @@ export default function BoardInfo() {
                                         <YAxis
                                             yAxisId={'left'}
                                             label={{
-                                                value: 'Temp/Humi',
+                                                value: 'Temp/Humi/Lux',
                                                 angle: -90,
                                                 position: 'insideLeft',
                                                 fill: '#f7fafc',
