@@ -2,8 +2,6 @@ import { Button, Modal, Switch, Form, Input, Select, TimePicker } from 'antd';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { io } from 'socket.io-client';
-import { date } from 'zod';
-import { LampCeiling } from 'lucide-react';
 import dayjs from 'dayjs';
 
 interface device {
