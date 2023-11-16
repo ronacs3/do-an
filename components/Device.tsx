@@ -227,50 +227,6 @@ const Device = ({ data, id }: device) => {
                 </div>
             </div>
         </div>
-        // <div className="flex flex-row gap-5 w-60 h-56 rounded-lg bg-slate-700">
-        //     <div className="flex flex-row gap-2 pb-12">
-        //         <button onClick={showModal2}>{data.name}</button>
-        //         <EditDevices
-        //             open={open2}
-        //             onCancel={() => {
-        //                 setOpen2(false);
-        //             }}
-        //             data={data}
-        //         />
-        //         <div>
-        //             <Switch checkedChildren="ON" unCheckedChildren="OFF" onChange={handleDevice} checked={active} />
-        //         </div>
-        //     </div>
-        //     <div className="flex flex-row  gap-12 ">
-        // <button className="font-inter " onClick={showModal}>
-        //     {data.pin}
-        // </button>
-        // <div className="pb-1">{data.type}</div>
-        //     </div>
-        // <Modal
-        //     open={open}
-        //     title="thong tin device"
-        //     onCancel={handleCanle}
-        //     footer={[
-        //         <Button key="submit" danger type="primary" onClick={handleSubmit}>
-        //             Remove
-        //         </Button>,
-        //         <Button key="back" onClick={handleCanle}>
-        //             Back
-        //         </Button>,
-        //     ]}
-        // >
-        //         <div className="grid grid-cols-2 gap-2 py-2">
-        //             <div>ID: {data.id}</div>
-        //             <div>Name : {data.name}</div>
-        //             <div>Type : {data.type}</div>
-        //             <div>Pin : {data.pin}</div>
-        //             <div>Board : {data.boardId}</div>
-        //             <div>Time Create : 20/08/2023</div>
-        //         </div>
-        //     </Modal>
-        //     <div className="font-inter">{data.state}</div>
-        // </div>
     );
 };
 
