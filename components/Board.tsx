@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { DoorClosed, Droplets, Lightbulb, Thermometer, Tv } from 'lucide-react';
 import { useState, useEffect, SetStateAction } from 'react';
 import { io } from 'socket.io-client';
+import { useRouter } from 'next/router';
 interface BoardInfo {
     data: {
         id: number;
@@ -19,6 +20,7 @@ interface BoardInfo {
 type SensorData = {
     temp: string;
     humi: string;
+    lux: string;
 };
 
 const BoardItem = ({ data }: BoardInfo) => {
@@ -33,44 +35,64 @@ const BoardItem = ({ data }: BoardInfo) => {
             }
         });
     }, [socket]);
+    // unassign board
+    const router = useRouter();
+    const shortId = data.shortId;
+    console.log(shortId);
+    const handleUnassignBoard = async (event: { preventDefault: () => void }) => {
+        event.preventDefault();
+        const token = localStorage.getItem('auth');
+        const url = `http://localhost:8080/boards/${shortId}/unassign`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                router.reload();
+            } else {
+                console.log('Request failed:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('An error occurred:', error);
+        }
+    };
     return (
         <Link
-            className="border rounded-lg h-auto px-10 py-5 flex flex-row justify-between bg-white hover:bg-green-200"
+            className=" h-36 w-board rounded-md bg-slate-600  flex flex-row gap-10 px-8 py-6 "
             href={`/Board/${data.shortId}`}
         >
-            <div className="">
+            <div className="w-full flex flex-col gap-2 place-content-start  font-medium">
+                <div>Board : {data.name} </div>
+                <div>ID: {data.shortId}d</div>
                 <div className="flex flex-row gap-2">
-                    <div className="pb-2">{data.shortId}</div>
-                    <div> Type: {data.type}</div>
-                </div>
-                <div className="flex flex-row gap-2">
-                    <div>
-                        <Tv />
+                    <div className="h-8 w-16 rounded-md flex place-content-center pt-1 bg-green-300">
+                        {value?.humi}%
                     </div>
-                    <div>
-                        <Lightbulb />
+                    <div className="h-8 w-16 rounded-md flex place-content-center pt-1 bg-blue-300">
+                        {value?.temp}°C
                     </div>
-                    <div>
-                        <DoorClosed />
+                    <div className="h-8 w-16 rounded-md flex place-content-center pt-1 bg-yellow-400">
+                        {value?.lux}Lux
                     </div>
                 </div>
             </div>
-            <div className="">
-                <div className="flex flex-row justify-end gap-2 pb-2">
-                    <div className="flex flex-row">
-                        <div>
-                            <Droplets />
-                        </div>
-                        <div>{value?.humi}%</div>
-                    </div>
-                    <div className="flex flex-row">
-                        <div>
-                            <Thermometer />
-                        </div>
-                        <div>{value?.temp}°C</div>
+            <div className="w-full flex place-content-end ">
+                <div className="flex flex-col gap-5">
+                    <div className="flex place-content-center items-center h-full w-full">
+                        <button
+                            className="rounded font-medium bg-slate-500 hover:bg-cyan-500 p-2"
+                            onClick={handleUnassignBoard}
+                        >
+                            Unassign
+                        </button>
                     </div>
                 </div>
-                <div className="flex  justify-end">Create: {new Date(data.createdAt).toLocaleDateString('en-us')}</div>
             </div>
         </Link>
     );

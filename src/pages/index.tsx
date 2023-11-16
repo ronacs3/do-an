@@ -1,5 +1,6 @@
 import Layout from '../../components/Layout';
-import { AirVentIcon, AreaChart, BarChart3, Droplets, MonitorSpeaker, Thermometer, Tv } from 'lucide-react';
+import { AirVentIcon, AreaChart, BadgePlus, BarChart3, Droplets, MonitorSpeaker, Thermometer, Tv } from 'lucide-react';
+import { ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import React, { useEffect, useState } from 'react';
 import { Switch } from 'antd';
 import Link from 'next/link';
@@ -21,6 +22,19 @@ type BoardData = {
     createdAt: string;
     updatedAt: string;
 };
+
+const formatXAxisTick = (tick: string) => {
+    const date = new Date(tick);
+    return date.toLocaleString('vi-VN', {
+        hour12: false,
+        day: 'numeric',
+        month: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+    });
+};
+
 export default function Home() {
     const router = useRouter();
     // useEffect(() => {
@@ -38,63 +52,124 @@ export default function Home() {
         list.splice(index, 1);
         setDevice(list);
     };
-    // const [BoardInfo, setBoardInfo] = useState<BoardData>();
-    // useEffect(() => {
-    //     const token = localStorage.getItem('auth');
-    //     const Info = async (token: string) => {
-    //         try {
-    //             const response = await getBoard(token);
-    //             setBoardInfo(response.data[0]);
-    //             console.log(response.data);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     };
-    //     if (token) {
-    //         Info(token);
-    //     }
-    // }, []);
+    const [BoardInfo, setBoardInfo] = useState<BoardData>();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        const Info = async (token: string) => {
+            try {
+                const response = await getBoard(token);
+                setBoardInfo(response.data[0]);
+                console.log(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        if (token) {
+            Info(token);
+        }
+    }, []);
+    const [ssData, setData] = useState<any[]>([]);
     return (
         <Layout>
-            <div className=" h-screen bg-slate-100">
-                <div className=" border-b px-10 py-8 flex flex-row bg-white">
-                    <div className="w-4/5 ">
-                        <div className="text-2xl font-medium">BOARD 1</div>
+            <div className=" h-screen">
+                <div className="px-5 pt-6 h-screen">
+                    {/* Sensor */}
+                    <div className=" px-11 flex flex-row">
+                        <div className="text-xl font-medium">Sensor</div>
                     </div>
-                    <div className="w-1/5 ">
-                        <div className="flex flex-row justify-end gap-5">
-                            <div className="flex flex-row gap-1">
-                                <div>
-                                    <Droplets />
-                                </div>
-                                <div>50%</div>
-                            </div>
-                            <div className="flex flex-row gap-1">
-                                <div>
-                                    <Thermometer />
-                                </div>
-                                <div>30°C</div>
-                            </div>
+                    <div className="flex flex-row justify-center gap-11 ">
+                        <div className="rounded w-60 h-28 flex flex-col items-center bg-slate-700 gap-3 ">
+                            <div className="pt-4 font-normal text-xl">Temperatute</div>
+                            <div className="font-normal text-4xl">-</div>
+                        </div>
+                        <div className="rounded w-60 h-28  flex flex-col items-center bg-slate-700 gap-3 ">
+                            <div className="pt-4 font-normal text-xl">Humidity</div>
+                            <div className="font-normal text-4xl">23%</div>
+                        </div>
+                        <div className="rounded w-60 h-28  flex flex-col items-center bg-slate-700 gap-3 ">
+                            <div className="pt-4 font-normal text-xl">Lux</div>
+                            <div className="font-normal text-4xl">23°C</div>
                         </div>
                     </div>
-                </div>
-                <div className="px-10 pt-8 h-5/6 ">
                     {/* Chart */}
-                    <div className="h-4/6 pb-3">
-                        <div className="flex flex-row pb-4">
-                            <BarChart3 className="pt-1" />
-                            <div className=" text-lg">Chart</div>
+                    <div className=" px-11 pb-3 flex flex-row ">
+                        <div className="text-xl font-medium">Chart</div>
+                    </div>
+                    <div className="h-96 px-11">
+                        <div className="border rounded h-full bg-slate-700">
+                            <ResponsiveContainer>
+                                <ComposedChart
+                                    data={ssData}
+                                    margin={{
+                                        top: 10,
+                                        right: 10,
+                                        left: 10,
+                                        bottom: 10,
+                                    }}
+                                >
+                                    <CartesianGrid stroke="#f5f5f5" />
+                                    <XAxis
+                                        dataKey="createdAt"
+                                        scale={'band'}
+                                        label={{
+                                            value: 'Time',
+                                            position: 'insideBottomRight',
+                                            offset: 0,
+                                            fill: '#f7fafc',
+                                        }}
+                                        tick={{ fontSize: 12, fill: '#f7fafc' }}
+                                        tickFormatter={formatXAxisTick}
+                                    ></XAxis>
+                                    <YAxis
+                                        yAxisId={'left'}
+                                        label={{
+                                            value: 'Temp/Humi',
+                                            angle: -90,
+                                            position: 'insideLeft',
+                                            fill: '#f7fafc',
+                                        }}
+                                        tick={{ fontSize: 12, fill: '#f7fafc' }}
+                                    ></YAxis>
+                                    <YAxis
+                                        yAxisId={'right'}
+                                        orientation="right"
+                                        label={{
+                                            value: 'Light',
+                                            angle: 90,
+                                            position: 'insideRight',
+                                            fill: '#f7fafc',
+                                        }}
+                                        tick={{ fontSize: 12, fill: '#f7fafc' }}
+                                    ></YAxis>
+                                    <Tooltip></Tooltip>
+                                    <Legend></Legend>
+
+                                    <Bar dataKey={'humi'} barSize={20} fill="#0388fc" yAxisId={'left'}></Bar>
+                                    <Line
+                                        dataKey="temp"
+                                        type={'monotone'}
+                                        stroke="#fc3903"
+                                        strokeWidth={2}
+                                        yAxisId={'left'}
+                                    ></Line>
+                                    <Line
+                                        dataKey="lux"
+                                        type={'monotone'}
+                                        stroke="#fc3903"
+                                        strokeWidth={2}
+                                        yAxisId={'left'}
+                                    ></Line>
+                                </ComposedChart>
+                            </ResponsiveContainer>
                         </div>
-                        <div className="border rounded-lg h-5/6 bg-amber-300"></div>
                     </div>
                     {/* Device */}
                     <div className="h-2/6 ">
-                        <div className="flex flex-row gap-2">
-                            <div>
-                                <MonitorSpeaker />
+                        <div className=" px-11 py-4 flex flex-row gap-2">
+                            <div className="text-xl font-medium">Deivce</div>
+                            <div className="pt-1">
+                                <BadgePlus />
                             </div>
-
-                            <div>Device</div>
                         </div>
                         {/* <Device /> */}
                     </div>

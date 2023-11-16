@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import Layout from '../../../components/Layout';
 import { BoardSibarShortId } from '../../../components/LeftSibar';
 import { RightSibarShortId } from '../../../components/RightSibar';
 import { useEffect, useState } from 'react';
@@ -10,6 +9,8 @@ import { ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianG
 import { Button, Modal, Form, Input, Select } from 'antd';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import formatString from '../../../utils/formatString';
+import { NavbarBoardShortID } from '../../../components/Navbar';
 
 // type DeviceType = 'TV' | 'DOOR' | 'BULB' | 'AC' | 'FAN' | 'OTHER';
 type DevicePin = 'D1' | 'D2' | 'D3' | 'D4';
@@ -255,45 +256,36 @@ export default function BoardInfo() {
         };
     }, [socket]);
     return (
-        <div className="flex flex-row w-full h-screen">
-            <BoardSibarShortId />
-            <div className="w-10/12">
-                <div className=" h-screen bg-slate-100">
-                    <div className=" border-b px-10 py-8 flex flex-row bg-white">
-                        <div className="w-4/5 ">
-                            <div className="text-2xl font-medium">BOARD {boardInfo?.name}</div>
+        <div className="text-white">
+            <NavbarBoardShortID />
+            <div className="flex flex-row w-full h-screen bg-slate-800 text-white">
+                <BoardSibarShortId />
+                <div className="w-full h-screen">
+                    <div className=" h-screen pt-2">
+                        {/* Sensor */}
+                        <div className=" px-11 flex flex-row">
+                            <div className="text-xl font-medium">Sensor</div>
                         </div>
-                        <div className="w-1/5 ">
-                            <div className="flex flex-row justify-end gap-5">
-                                <div className="flex flex-row gap-1">
-                                    <div>
-                                        <Droplets />
-                                    </div>
-                                    <div>{value?.humi}%</div>
-                                </div>
-                                <div className="flex flex-row gap-1">
-                                    <div>
-                                        <Thermometer />
-                                    </div>
-                                    <div>{value?.temp}°C</div>
-                                </div>
-                                <div className="flex flex-row gap-1">
-                                    <div>
-                                        <Thermometer />
-                                    </div>
-                                    <div>{value?.lux}LUX</div>
-                                </div>
+                        <div className="flex flex-row justify-center gap-11 ">
+                            <div className="rounded w-60 h-28 flex flex-col items-center bg-slate-700 gap-3 ">
+                                <div className="pt-4 font-normal text-xl">Temperatute</div>
+                                <div className="font-normal text-4xl">{formatString(value?.temp)}%</div>
+                            </div>
+                            <div className="rounded w-60 h-28  flex flex-col items-center bg-slate-700 gap-3 ">
+                                <div className="pt-4 font-normal text-xl">Humidity</div>
+                                <div className="font-normal text-4xl">{formatString(value?.humi)}%</div>
+                            </div>
+                            <div className="rounded w-60 h-28  flex flex-col items-center bg-slate-700 gap-3 ">
+                                <div className="pt-4 font-normal text-xl">Lux</div>
+                                <div className="font-normal text-4xl">{formatString(value?.lux)}Lux</div>
                             </div>
                         </div>
-                    </div>
-                    <div className="px-10 pt-5 h-5/6 ">
                         {/* Chart */}
-                        <div className="h-4/6 pb-3">
-                            <div className="flex flex-row pb-4">
-                                <BarChart3 className="pt-1" />
-                                <div className=" text-lg">Chart</div>
-                            </div>
-                            <div className="border rounded-lg h-5/6 bg-slate-300">
+                        <div className=" px-11 pb-3 flex flex-row ">
+                            <div className="text-xl font-medium">Chart</div>
+                        </div>
+                        <div className="h-96 px-11">
+                            <div className="border rounded h-full bg-slate-700">
                                 <ResponsiveContainer>
                                     <ComposedChart
                                         data={ssData}
@@ -352,7 +344,7 @@ export default function BoardInfo() {
                                         <Line
                                             dataKey="lux"
                                             type={'monotone'}
-                                            stroke="#fcba03"
+                                            stroke="#d4ff00"
                                             strokeWidth={2}
                                             yAxisId={'left'}
                                         ></Line>
@@ -362,12 +354,8 @@ export default function BoardInfo() {
                         </div>
                         {/* Device */}
                         <div className="h-2/6 ">
-                            <div className="flex flex-row gap-2">
-                                <div>
-                                    <MonitorSpeaker />
-                                </div>
-
-                                <div>Device</div>
+                            <div className="px-11 py-4 flex flex-row gap-2">
+                                <div className="text-xl font-medium">Deivce</div>
                                 <button className="font-inter" onClick={showModal}>
                                     <BadgePlus />
                                 </button>
@@ -393,8 +381,8 @@ export default function BoardInfo() {
                         </div>
                     </div>
                 </div>
+                {/* <RightSibarShortId /> */}
             </div>
-            <RightSibarShortId />
         </div>
     );
 }
