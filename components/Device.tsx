@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { io } from 'socket.io-client';
 import dayjs from 'dayjs';
+import { formatDate } from '../utils/formatDate';
 
 interface device {
     data: {
@@ -12,6 +13,7 @@ interface device {
         pin: string;
         state: boolean;
         boardId: number;
+        createdAt: string;
     };
     id: string;
 }
@@ -25,6 +27,7 @@ interface CollectionCreateFormProps {
         pin: string;
         state: boolean;
         boardId: number;
+        createdAt: string;
     };
 }
 const { Option } = Select;
@@ -213,11 +216,11 @@ const Device = ({ data, id }: device) => {
                 >
                     <div className="grid grid-cols-2 gap-2 py-2">
                         <div>ID: {data.id}</div>
-                        <div>Name : {data.name}</div>
-                        <div>Type : {data.type}</div>
-                        <div>Pin : {data.pin}</div>
-                        <div>Board : {data.boardId}</div>
-                        <div>Time Create : 20/08/2023</div>
+                        <div>Name: {data.name}</div>
+                        <div>Type: {data.type}</div>
+                        <div>Pin: {data.pin}</div>
+                        <div>Board: {data.boardId}</div>
+                        <div>Time Create: {formatDate(data.createdAt)}</div>
                     </div>
                 </Modal>
                 <div className="w-full flex flex-row place-content-end">

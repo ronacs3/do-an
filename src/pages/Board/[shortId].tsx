@@ -334,6 +334,13 @@ export default function BoardInfo() {
                                         <Legend></Legend>
 
                                         <Bar dataKey={'humi'} barSize={20} fill="#0388fc" yAxisId={'left'}></Bar>
+                                        {/* <Line
+                                            dataKey="humi"
+                                            type={'monotone'}
+                                            stroke="#0388fc"
+                                            strokeWidth={2}
+                                            yAxisId={'left'}
+                                        ></Line> */}
                                         <Line
                                             dataKey="temp"
                                             type={'monotone'}

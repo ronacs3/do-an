@@ -71,14 +71,14 @@ const BoardItem = ({ data }: BoardInfo) => {
                 <div>Board : {data.name} </div>
                 <div>ID: {data.shortId}d</div>
                 <div className="flex flex-row gap-2">
-                    <div className="h-8 w-16 rounded-md flex place-content-center pt-1 bg-green-300">
-                        {value?.humi}%
+                    <div className="h-8 w-16 rounded-md flex place-content-center pt-1 bg-red-300">
+                        {value?.temp} °C
                     </div>
-                    <div className="h-8 w-16 rounded-md flex place-content-center pt-1 bg-blue-300">
-                        {value?.temp}°C
+                    <div className="h-8 w-16 rounded-md flex place-content-center pt-1 bg-blue-400">
+                        {value?.humi} %
                     </div>
                     <div className="h-8 w-16 rounded-md flex place-content-center pt-1 bg-yellow-400">
-                        {value?.lux}Lux
+                        {value?.lux} Lux
                     </div>
                 </div>
             </div>

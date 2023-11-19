@@ -8,7 +8,49 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { ChangeBoard } from '../validation/schema';
+import { getUser } from '../lib/ultis';
+
+type Board = {
+    name: string;
+};
+type BoardInfo = {
+    id: number;
+    boardId: number;
+    shortId: string;
+    name: string;
+    type: string;
+    latitude: string;
+    longitude: string;
+    ownerId: number;
+    createdAt: string;
+    updatedAt: string;
+};
+type UserInfo = {
+    id: number;
+    username: string;
+    email: string;
+    fName: string;
+    lName: string;
+    createdAt: string;
+    updatedAt: string;
+};
+
 function NavbarHome() {
+    const [userInfo, setuserInfo] = useState<UserInfo>();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        const Info = async (token: string) => {
+            try {
+                const response = await getUser(token);
+                setuserInfo(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        if (token) {
+            Info(token);
+        }
+    }, []);
     const items: MenuProps['items'] = [
         {
             label: <Link href="/User">Profile</Link>,
@@ -33,7 +75,7 @@ function NavbarHome() {
                     <Dropdown menu={{ items }}>
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
-                                Username
+                                {userInfo?.username}
                                 <ChevronDown />
                             </Space>
                         </a>
@@ -44,6 +86,21 @@ function NavbarHome() {
     );
 }
 function NavbarBoard() {
+    const [userInfo, setuserInfo] = useState<UserInfo>();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        const Info = async (token: string) => {
+            try {
+                const response = await getUser(token);
+                setuserInfo(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        if (token) {
+            Info(token);
+        }
+    }, []);
     const items: MenuProps['items'] = [
         {
             label: <Link href="/User">Profile</Link>,
@@ -54,6 +111,7 @@ function NavbarBoard() {
             key: '1',
         },
     ];
+
     return (
         <div className="flex w-full h-navbar bg-slate-800 border-black border-b">
             <div className="flex w-sidebar place-content-center items-center">
@@ -65,7 +123,7 @@ function NavbarBoard() {
                     <Dropdown menu={{ items }}>
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
-                                Username
+                                {userInfo?.username}
                                 <ChevronDown />
                             </Space>
                         </a>
@@ -75,22 +133,23 @@ function NavbarBoard() {
         </div>
     );
 }
-type Board = {
-    name: string;
-};
-type BoardInfo = {
-    id: number;
-    boardId: number;
-    shortId: string;
-    name: string;
-    type: string;
-    latitude: string;
-    longitude: string;
-    ownerId: number;
-    createdAt: string;
-    updatedAt: string;
-};
+
 const NavbarBoardShortID = () => {
+    const [userInfo, setuserInfo] = useState<UserInfo>();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        const Info = async (token: string) => {
+            try {
+                const response = await getUser(token);
+                setuserInfo(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        if (token) {
+            Info(token);
+        }
+    }, []);
     const items: MenuProps['items'] = [
         {
             label: <Link href="/User">Profile</Link>,
@@ -183,7 +242,13 @@ const NavbarBoardShortID = () => {
                     >
                         <form className="flex flex-col gap-2 pt-1">
                             <label className=" pr-7">Name:</label>
-                            <input type="text" className="border rounded" {...register('name')} id="name" />
+                            <input
+                                type="text"
+                                className="border rounded"
+                                placeholder={boardInfo?.name}
+                                {...register('name')}
+                                id="name"
+                            />
                         </form>
                     </Modal>
                 </div>
@@ -192,7 +257,7 @@ const NavbarBoardShortID = () => {
                     <Dropdown menu={{ items }}>
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
-                                Username
+                                {userInfo?.username}
                                 <ChevronDown />
                             </Space>
                         </a>
