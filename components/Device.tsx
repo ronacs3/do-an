@@ -17,6 +17,11 @@ interface device {
     };
     id: string;
 }
+type SensorData = {
+    temp: string;
+    humi: string;
+    lux: number;
+};
 interface CollectionCreateFormProps {
     open: boolean;
     onCancel: () => void;
@@ -121,11 +126,11 @@ const Device = ({ data, id }: device) => {
 
     const socket = io('http://localhost:8080');
     const [active, setActive] = useState(data.state);
+    // Bat tat thiet bi
     const handleDevice = async () => {
         setActive(!active);
         const token = localStorage.getItem('auth');
         const newState = !data.state;
-
         try {
             const response = await fetch(`http://localhost:8080/boards/${shortId}/devices/${data.id}/state`, {
                 method: 'PUT',
@@ -151,6 +156,110 @@ const Device = ({ data, id }: device) => {
             console.log(error);
         }
     };
+    const handleAutoDevice = async () => {
+        setActive(!active);
+        const token = localStorage.getItem('auth');
+        const newState = !data.state;
+        try {
+            const response = await fetch(`http://localhost:8080/boards/${shortId}/devices/${data.id}/state`, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ state: newState }), // Send the new state
+            });
+
+            const res = await response.json();
+
+            if (res.success) {
+                data.state = newState;
+                let message = {
+                    [id]: data.state,
+                };
+                socket.emit('/wsn/devices', JSON.stringify(message));
+                console.log(message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const desiredBoardID = data.boardId;
+    const [value, setValue] = useState<SensorData>();
+    useEffect(() => {
+        socket.on('/wsn/sensors', async (sensor) => {
+            if (sensor.boardId === desiredBoardID) {
+                if (data.type === 'BULB') {
+                    if (sensor.lux < 50) {
+                        const token = localStorage.getItem('auth');
+                        const newState = true;
+                        try {
+                            const response = await fetch(
+                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
+                                {
+                                    method: 'PUT',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        Authorization: `Bearer ${token}`,
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ state: newState }), // Send the new state
+                                },
+                            );
+
+                            const res = await response.json();
+
+                            if (res.success) {
+                                setActive(newState);
+                                // data.state = newState;
+                                // let message = {
+                                //     [id]: data.state,
+                                // };
+                                // socket.emit('/wsn/devices', JSON.stringify(message));
+                                console.log('oke');
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        const token = localStorage.getItem('auth');
+                        const newState = false;
+                        try {
+                            const response = await fetch(
+                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
+                                {
+                                    method: 'PUT',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        Authorization: `Bearer ${token}`,
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ state: newState }), // Send the new state
+                                },
+                            );
+
+                            const res = await response.json();
+
+                            if (res.success) {
+                                setActive(newState);
+                                // data.state = newState;
+                                // let message = {
+                                //     [id]: data.state,
+                                // };
+                                // socket.emit('/wsn/devices', JSON.stringify(message));
+                                console.log('oke');
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                } else {
+                    console.log('no run');
+                }
+            }
+        });
+    }, [socket]);
 
     // remove device
     const handleSubmit = async (event: { preventDefault: () => void }) => {
@@ -183,13 +292,7 @@ const Device = ({ data, id }: device) => {
             <div className="flex flex-row gap-2 pb-24 w-full">
                 <div>
                     <button onClick={showModal2}>{data.name}</button>
-                    <EditDevices
-                        open={open2}
-                        onCancel={() => {
-                            setOpen2(false);
-                        }}
-                        data={data}
-                    />
+                    <EditDevices open={open2} onCancel={handleCanle2} data={data} />
                 </div>
                 <div className="w-full flex flex-row place-content-end">
                     <Switch checkedChildren="ON" unCheckedChildren="OFF" onChange={handleDevice} checked={active} />

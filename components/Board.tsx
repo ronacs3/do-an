@@ -38,7 +38,6 @@ const BoardItem = ({ data }: BoardInfo) => {
     // unassign board
     const router = useRouter();
     const shortId = data.shortId;
-    console.log(shortId);
     const handleUnassignBoard = async (event: { preventDefault: () => void }) => {
         event.preventDefault();
         const token = localStorage.getItem('auth');
