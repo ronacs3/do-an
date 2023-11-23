@@ -80,11 +80,9 @@ const EditDevices: React.FC<CollectionCreateFormProps> = ({ open, onCancel, data
                 </Form.Item>
                 <Form.Item name="type" label="type" initialValue={data.type}>
                     <Select placeholder="select your type">
-                        <Option value="TV">TV</Option>
-                        <Option value="DOOR">DOOR</Option>
-                        <Option value="BULB">BULB</Option>
-                        <Option value="AC">AC</Option>
-                        <Option value="FAN">FAN</Option>
+                        <Option value="DEN">DEN</Option>
+                        <Option value="BOM">BOM</Option>
+                        <Option value="QUAT">QUAT</Option>
                         <Option value="OTHER">Other</Option>
                     </Select>
                 </Form.Item>
@@ -96,8 +94,8 @@ const EditDevices: React.FC<CollectionCreateFormProps> = ({ open, onCancel, data
                         <Option value="D4">D4</Option>
                     </Select>
                 </Form.Item>
-                <Form.Item name="rule" label="rule" initialValue={data.rule}>
-                    <InputNumber className="w-full" />
+                <Form.Item name="rule" label="rule">
+                    <InputNumber className="w-full" placeholder="Enter your rule for device" />
                 </Form.Item>
             </Form>
         </Modal>
@@ -160,7 +158,7 @@ const Device = ({ data, id }: device) => {
     useEffect(() => {
         socket.on('/wsn/sensors', async (sensor) => {
             if (sensor.boardId === desiredBoardID) {
-                if (data.type === 'BULB') {
+                if (data.type === 'DEN') {
                     if (sensor.lux < data.rule) {
                         const token = localStorage.getItem('auth');
                         const newState = true;
@@ -224,8 +222,138 @@ const Device = ({ data, id }: device) => {
                             console.log(error);
                         }
                     }
+                }
+                if (data.type === 'BOM') {
+                    if (sensor.humi < data.rule) {
+                        const token = localStorage.getItem('auth');
+                        const newState = true;
+                        try {
+                            const response = await fetch(
+                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
+                                {
+                                    method: 'PUT',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        Authorization: `Bearer ${token}`,
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ state: newState }), // Send the new state
+                                },
+                            );
+
+                            const res = await response.json();
+
+                            if (res.success) {
+                                setActive(newState);
+                                // data.state = newState;
+                                // let message = {
+                                //     [id]: data.state,
+                                // };
+                                // socket.emit('/wsn/devices', JSON.stringify(message));
+                                console.log('oke');
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        const token = localStorage.getItem('auth');
+                        const newState = false;
+                        try {
+                            const response = await fetch(
+                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
+                                {
+                                    method: 'PUT',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        Authorization: `Bearer ${token}`,
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ state: newState }), // Send the new state
+                                },
+                            );
+
+                            const res = await response.json();
+
+                            if (res.success) {
+                                setActive(newState);
+                                // data.state = newState;
+                                // let message = {
+                                //     [id]: data.state,
+                                // };
+                                // socket.emit('/wsn/devices', JSON.stringify(message));
+                                console.log('oke');
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                }
+                if (data.type === 'QUAT') {
+                    if (sensor.temp < data.rule) {
+                        const token = localStorage.getItem('auth');
+                        const newState = true;
+                        try {
+                            const response = await fetch(
+                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
+                                {
+                                    method: 'PUT',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        Authorization: `Bearer ${token}`,
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ state: newState }), // Send the new state
+                                },
+                            );
+
+                            const res = await response.json();
+
+                            if (res.success) {
+                                setActive(newState);
+                                // data.state = newState;
+                                // let message = {
+                                //     [id]: data.state,
+                                // };
+                                // socket.emit('/wsn/devices', JSON.stringify(message));
+                                console.log('oke');
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    } else {
+                        const token = localStorage.getItem('auth');
+                        const newState = false;
+                        try {
+                            const response = await fetch(
+                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
+                                {
+                                    method: 'PUT',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        Authorization: `Bearer ${token}`,
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ state: newState }), // Send the new state
+                                },
+                            );
+
+                            const res = await response.json();
+
+                            if (res.success) {
+                                setActive(newState);
+                                // data.state = newState;
+                                // let message = {
+                                //     [id]: data.state,
+                                // };
+                                // socket.emit('/wsn/devices', JSON.stringify(message));
+                                console.log('oke');
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
                 } else {
-                    console.log('no run');
+                    console.log('Khong hoat dong');
                 }
             }
         });

@@ -26,7 +26,7 @@ type SensorData = {
     temp: string;
     humi: string;
 };
-export default function Board({}) {
+export default function Home({}) {
     // boardInfo
     const [boardInfo, setBoardInfo] = useState<BoardInfo>();
     useEffect(() => {
