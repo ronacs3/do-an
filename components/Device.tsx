@@ -1,4 +1,4 @@
-import { Button, Modal, Switch, Form, Input, Select, TimePicker } from 'antd';
+import { Button, Modal, Switch, Form, Input, Select, TimePicker, InputNumber } from 'antd';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { io } from 'socket.io-client';
@@ -12,16 +12,13 @@ interface device {
         type: string;
         pin: string;
         state: boolean;
+        rule: number;
         boardId: number;
         createdAt: string;
     };
     id: string;
 }
-type SensorData = {
-    temp: string;
-    humi: string;
-    lux: number;
-};
+
 interface CollectionCreateFormProps {
     open: boolean;
     onCancel: () => void;
@@ -31,6 +28,7 @@ interface CollectionCreateFormProps {
         type: string;
         pin: string;
         state: boolean;
+        rule: number;
         boardId: number;
         createdAt: string;
     };
@@ -90,13 +88,16 @@ const EditDevices: React.FC<CollectionCreateFormProps> = ({ open, onCancel, data
                         <Option value="OTHER">Other</Option>
                     </Select>
                 </Form.Item>
-                <Form.Item name="pin" label="pin" initialValue={data.pin}>
-                    <Select placeholder="select your pin">
+                <Form.Item name="pin" label="pin">
+                    <Select placeholder={data.pin}>
                         <Option value="D1">D1</Option>
                         <Option value="D2">D2</Option>
                         <Option value="D3">D3</Option>
                         <Option value="D4">D4</Option>
                     </Select>
+                </Form.Item>
+                <Form.Item name="rule" label="rule" initialValue={data.rule}>
+                    <InputNumber className="w-full" />
                 </Form.Item>
             </Form>
         </Modal>
@@ -123,7 +124,6 @@ const Device = ({ data, id }: device) => {
     };
     const { shortId } = router.query;
     //state devices
-
     const socket = io('http://localhost:8080');
     const [active, setActive] = useState(data.state);
     // Bat tat thiet bi
@@ -156,42 +156,12 @@ const Device = ({ data, id }: device) => {
             console.log(error);
         }
     };
-    const handleAutoDevice = async () => {
-        setActive(!active);
-        const token = localStorage.getItem('auth');
-        const newState = !data.state;
-        try {
-            const response = await fetch(`http://localhost:8080/boards/${shortId}/devices/${data.id}/state`, {
-                method: 'PUT',
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ state: newState }), // Send the new state
-            });
-
-            const res = await response.json();
-
-            if (res.success) {
-                data.state = newState;
-                let message = {
-                    [id]: data.state,
-                };
-                socket.emit('/wsn/devices', JSON.stringify(message));
-                console.log(message);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
     const desiredBoardID = data.boardId;
-    const [value, setValue] = useState<SensorData>();
     useEffect(() => {
         socket.on('/wsn/sensors', async (sensor) => {
             if (sensor.boardId === desiredBoardID) {
                 if (data.type === 'BULB') {
-                    if (sensor.lux < 50) {
+                    if (sensor.lux < data.rule) {
                         const token = localStorage.getItem('auth');
                         const newState = true;
                         try {
@@ -323,6 +293,7 @@ const Device = ({ data, id }: device) => {
                         <div>Type: {data.type}</div>
                         <div>Pin: {data.pin}</div>
                         <div>Board: {data.boardId}</div>
+                        <div>Rule: {data.rule}</div>
                         <div>Time Create: {formatDate(data.createdAt)}</div>
                     </div>
                 </Modal>

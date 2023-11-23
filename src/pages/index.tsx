@@ -2,7 +2,7 @@ import Layout from '../../components/Layout';
 import { AirVentIcon, AreaChart, BadgePlus, BarChart3, Droplets, MonitorSpeaker, Thermometer, Tv } from 'lucide-react';
 import { ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import React, { useEffect, useState } from 'react';
-import { Switch } from 'antd';
+import { InputNumber, Switch } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Device } from '../../components/Device';
@@ -69,6 +69,7 @@ export default function Home() {
         }
     }, []);
     const [ssData, setData] = useState<any[]>([]);
+
     return (
         <Layout>
             <div className=" h-screen">
@@ -171,7 +172,9 @@ export default function Home() {
                                 <BadgePlus />
                             </div>
                         </div>
+
                         {/* <Device /> */}
+                        <div></div>
                     </div>
                 </div>
             </div>
