@@ -140,11 +140,9 @@ const AddDevices: React.FC<AddDevicesProps> = ({ open, onCancel, value = {}, onC
                 </Form.Item>
                 <Form.Item name="type" label="type">
                     <Select placeholder="select your type">
-                        <Option value="TV">TV</Option>
-                        <Option value="DOOR">DOOR</Option>
-                        <Option value="BULB">BULB</Option>
-                        <Option value="AC">AC</Option>
-                        <Option value="FAN">FAN</Option>
+                        <Option value="DEN">DEN</Option>
+                        <Option value="BOM">BOM</Option>
+                        <Option value="QUAT">QUAT</Option>
                         <Option value="OTHER">Other</Option>
                     </Select>
                 </Form.Item>

@@ -13,6 +13,7 @@ interface device {
         pin: string;
         state: boolean;
         rule: number;
+        auto: boolean;
         boardId: number;
         createdAt: string;
     };
@@ -29,6 +30,7 @@ interface CollectionCreateFormProps {
         pin: string;
         state: boolean;
         rule: number;
+        auto: boolean;
         boardId: number;
         createdAt: string;
     };
@@ -67,6 +69,7 @@ const EditDevices: React.FC<CollectionCreateFormProps> = ({ open, onCancel, data
                             .then((success) => {
                                 router.reload();
                             });
+                        console.log(values);
                     })
                     .catch((info) => {
                         console.log('Validate Failed:', info);
@@ -96,6 +99,9 @@ const EditDevices: React.FC<CollectionCreateFormProps> = ({ open, onCancel, data
                 </Form.Item>
                 <Form.Item name="rule" label="rule">
                     <InputNumber className="w-full" placeholder="Enter your rule for device" />
+                </Form.Item>
+                <Form.Item label="auto" name="auto" valuePropName="checked" initialValue={data.auto}>
+                    <Switch />
                 </Form.Item>
             </Form>
         </Modal>
@@ -157,7 +163,7 @@ const Device = ({ data, id }: device) => {
     const desiredBoardID = data.boardId;
     useEffect(() => {
         socket.on('/wsn/sensors', async (sensor) => {
-            if (sensor.boardId === desiredBoardID) {
+            if (sensor.boardId === desiredBoardID && data.auto != false) {
                 if (data.type === 'DEN') {
                     if (sensor.lux < data.rule) {
                         const token = localStorage.getItem('auth');
@@ -352,8 +358,6 @@ const Device = ({ data, id }: device) => {
                             console.log(error);
                         }
                     }
-                } else {
-                    console.log('Khong hoat dong');
                 }
             }
         });
@@ -422,6 +426,7 @@ const Device = ({ data, id }: device) => {
                         <div>Pin: {data.pin}</div>
                         <div>Board: {data.boardId}</div>
                         <div>Rule: {data.rule}</div>
+                        <div>Auto: {data.auto}</div>
                         <div>Time Create: {formatDate(data.createdAt)}</div>
                     </div>
                 </Modal>

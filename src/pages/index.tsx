@@ -69,7 +69,16 @@ export default function Home() {
         }
     }, []);
     const [ssData, setData] = useState<any[]>([]);
-
+    const [isOn, setIsOn] = useState(false);
+    const handleToggle = () => {
+        // Toggle the state between true and false
+        setIsOn((prevState) => !prevState);
+    };
+    if (isOn == true) {
+        console.log('chay nhe');
+    } else {
+        console.log('deo chay');
+    }
     return (
         <Layout>
             <div className=" h-screen">
@@ -174,7 +183,9 @@ export default function Home() {
                         </div>
 
                         {/* <Device /> */}
-                        <div></div>
+                        <div>
+                            <button onClick={handleToggle}>{isOn ? 'Turn Off' : 'Turn On'}</button>
+                        </div>
                     </div>
                 </div>
             </div>
