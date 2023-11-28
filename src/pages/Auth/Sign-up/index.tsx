@@ -5,6 +5,7 @@ import { SignUpSchema } from '../../../../validation/schema';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import Image from 'next/image';
 
 type SignupDatas = {
     username: string;
@@ -81,63 +82,68 @@ export default function Signup() {
     return (
         <>
             <Toaster position="top-center" reverseOrder={false} />
-            <div className="h-screen grid justify-center items-center bg-slate-100">
-                <form className="p-20 bg-white" onSubmit={handleSubmit(handleSignUP)}>
-                    <div className="flex justify-center pb-3"> Register </div>
-                    <div className="flex flex-col gap-3">
-                        <label>Username</label>
-                        <input
-                            type="text"
-                            className="border rounded p-1"
-                            placeholder="abcxyz"
-                            required
-                            {...register('username')}
-                            id="username"
-                        />
-                        <p className="text-red-600">{errors.username?.message}</p>
-                    </div>
-                    <div className="flex flex-col gap-3">
-                        <label>Email</label>
-                        <input
-                            type="email"
-                            className="border rounded p-1"
-                            placeholder="abcxyz@gmail.com"
-                            required
-                            {...register('email')}
-                            id="email"
-                        />
-                        <p className="text-red-600">{errors.email?.message}</p>
-                    </div>
-                    <div className="flex flex-col gap-3">
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            className="border rounded p-1"
-                            placeholder="******"
-                            required
-                            {...register('password')}
-                            id="password"
-                        />
-                        <p className="text-red-600">{errors.password?.message}</p>
-                    </div>
-                    <div className="flex flex-col gap-3">
-                        <label>Confirm Password</label>
-                        <input
-                            type="password"
-                            className="border rounded p-1"
-                            placeholder="******"
-                            required
-                            {...register('confirmPassword')}
-                            id="confirmPassword"
-                        />
-                        <p className="text-red-600">{errors.confirmPassword?.message}</p>
-                    </div>
-                    <div className=" flex justify-center pt-4">
-                        <button className="border px-5 py-2 rounded-lg hover:bg-sky-400" type="submit">
-                            <div>Register</div>
-                        </button>
-                    </div>
-                </form>
+            <div className="flex">
+                <div className="h-screen grid justify-center items-center bg-slate-300 w-1/3">
+                    <form className="p-20 rounded-lg bg-white" onSubmit={handleSubmit(handleSignUP)}>
+                        <div className="flex justify-center font-inter font-bold text-lg pb-3"> Register </div>
+                        <div className="flex flex-col gap-3">
+                            <label>Username</label>
+                            <input
+                                type="text"
+                                className="border rounded p-1"
+                                placeholder="abcxyz"
+                                required
+                                {...register('username')}
+                                id="username"
+                            />
+                            <p className="text-red-600">{errors.username?.message}</p>
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                className="border rounded p-1"
+                                placeholder="abcxyz@gmail.com"
+                                required
+                                {...register('email')}
+                                id="email"
+                            />
+                            <p className="text-red-600">{errors.email?.message}</p>
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            <label>Password</label>
+                            <input
+                                type="password"
+                                className="border rounded p-1"
+                                placeholder="******"
+                                required
+                                {...register('password')}
+                                id="password"
+                            />
+                            <p className="text-red-600">{errors.password?.message}</p>
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            <label>Confirm Password</label>
+                            <input
+                                type="password"
+                                className="border rounded p-1"
+                                placeholder="******"
+                                required
+                                {...register('confirmPassword')}
+                                id="confirmPassword"
+                            />
+                            <p className="text-red-600">{errors.confirmPassword?.message}</p>
+                        </div>
+                        <div className=" flex justify-center pt-4">
+                            <button className="border px-5 py-2 rounded-lg bg-green-300 hover:bg-sky-400" type="submit">
+                                <div>Register</div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div className="w-2/3 flex">
+                    <Image src="/signin.jpg" alt="Logo" width={1500} height={973} />
+                </div>
             </div>
         </>
     );

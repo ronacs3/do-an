@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { io } from 'socket.io-client';
 import dayjs from 'dayjs';
 import { formatDate } from '../utils/formatDate';
+import formatAuto from '../utils/formatAuto';
 
 interface device {
     data: {
@@ -160,12 +161,30 @@ const Device = ({ data, id }: device) => {
             console.log(error);
         }
     };
+    // set rule
+    const localStorageKey = 'selectedOperator';
+    const [selectedOperator, setSelectedOperator] = useState(() => {
+        if (typeof window !== 'undefined') {
+            // Check if window is defined (i.e., if the code is running in a browser environment)
+            return localStorage.getItem(localStorageKey) || '<';
+        }
+        return '<'; // Default value if running in an environment without localStorage
+    });
+
+    // Update localStorage when selectedOperator changes
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(localStorageKey, selectedOperator);
+        }
+    }, [selectedOperator]);
+
     const desiredBoardID = data.boardId;
     useEffect(() => {
         socket.on('/wsn/sensors', async (sensor) => {
+            const sensorlux = sensor.lux;
             if (sensor.boardId === desiredBoardID && data.auto != false) {
                 if (data.type === 'DEN') {
-                    if (sensor.lux < data.rule) {
+                    if (eval(`sensorlux ${selectedOperator} ${data.rule}`)) {
                         const token = localStorage.getItem('auth');
                         const newState = true;
                         try {
@@ -426,7 +445,20 @@ const Device = ({ data, id }: device) => {
                         <div>Pin: {data.pin}</div>
                         <div>Board: {data.boardId}</div>
                         <div>Rule: {data.rule}</div>
-                        <div>Auto: {data.auto}</div>
+                        <div>Auto: {formatAuto(data.auto)}</div>
+                        <div className="flex gap-1">
+                            <label htmlFor="operator">Select Operator:</label>
+                            <select
+                                id="operator"
+                                value={selectedOperator}
+                                onChange={(e) => setSelectedOperator(e.target.value)}
+                                className="border rounded"
+                            >
+                                <option value="<">&lt;</option>
+                                <option value="==">=</option>
+                                <option value=">">&gt;</option>
+                            </select>
+                        </div>
                         <div>Time Create: {formatDate(data.createdAt)}</div>
                     </div>
                 </Modal>

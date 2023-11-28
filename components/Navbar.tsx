@@ -65,11 +65,11 @@ function NavbarHome() {
         <div className="flex w-full h-navbar bg-slate-800 border-black border-b">
             <div className="flex w-sidebar place-content-center items-center">
                 {/* <Image src="/logo.ico" alt="logo" width={100} height={50} /> */}
-                Wangs
+                Nhom 9
             </div>
             <div className="flex w-full border-l border-black pl-2">
                 <div className="w-full flex items-center">
-                    <div className="text-2xl font-medium ">Board Name</div>
+                    <div className="text-2xl font-medium ">Over View</div>
                 </div>
                 <div className=" flex justify-end items-center place-content-center w-full pr-2">
                     <Dropdown menu={{ items }}>
@@ -116,7 +116,7 @@ function NavbarBoard() {
         <div className="flex w-full h-navbar bg-slate-800 border-black border-b">
             <div className="flex w-sidebar place-content-center items-center">
                 {/* <Image src="/logo.ico" alt="logo" width={100} height={50} /> */}
-                Wangs
+                Nhom 9
             </div>
             <div className="flex w-full border-l border-black pl-2">
                 <div className=" flex justify-end items-center place-content-center w-full pr-2">
@@ -275,6 +275,7 @@ export default function Navbar() {
         <>
             {router.pathname === '/' && <NavbarHome />}
             {router.pathname === '/Board' && <NavbarBoard />}
+            {router.pathname === '/User' && <NavbarHome />}
         </>
     );
 }
