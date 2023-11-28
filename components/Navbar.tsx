@@ -85,6 +85,53 @@ function NavbarHome() {
         </div>
     );
 }
+function NavbarUser() {
+    const [userInfo, setuserInfo] = useState<UserInfo>();
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        const Info = async (token: string) => {
+            try {
+                const response = await getUser(token);
+                setuserInfo(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        if (token) {
+            Info(token);
+        }
+    }, []);
+    const items: MenuProps['items'] = [
+        {
+            label: <Link href="/User">Profile</Link>,
+            key: '0',
+        },
+        {
+            label: <Link href="/Auth/Sign-out">Log out</Link>,
+            key: '1',
+        },
+    ];
+    return (
+        <div className="flex w-full h-navbar bg-slate-800 border-black border-b">
+            <div className="flex w-sidebar place-content-center items-center">
+                {/* <Image src="/logo.ico" alt="logo" width={100} height={50} /> */}
+                Nhom 9
+            </div>
+            <div className="flex w-full border-l border-black pl-2">
+                <div className=" flex justify-end items-center place-content-center w-full pr-2">
+                    <Dropdown menu={{ items }}>
+                        <a onClick={(e) => e.preventDefault()}>
+                            <Space>
+                                {userInfo?.username}
+                                <ChevronDown />
+                            </Space>
+                        </a>
+                    </Dropdown>
+                </div>
+            </div>
+        </div>
+    );
+}
 function NavbarBoard() {
     const [userInfo, setuserInfo] = useState<UserInfo>();
     useEffect(() => {
@@ -275,7 +322,7 @@ export default function Navbar() {
         <>
             {router.pathname === '/' && <NavbarHome />}
             {router.pathname === '/Board' && <NavbarBoard />}
-            {router.pathname === '/User' && <NavbarHome />}
+            {router.pathname === '/User' && <NavbarUser />}
         </>
     );
 }

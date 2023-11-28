@@ -3,8 +3,10 @@ import { UserChangePassword, UserChangeProfile } from '../../../components/User'
 export default function User() {
     return (
         <Layout>
-            <UserChangeProfile />
-            <UserChangePassword />
+            <div className="flex h-screen place-content-center items-center">
+                <UserChangeProfile />
+                {/* <UserChangePassword /> */}
+            </div>
         </Layout>
     );
 }

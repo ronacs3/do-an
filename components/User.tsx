@@ -45,7 +45,7 @@ const UserChangePassword = () => {
         }
     };
     return (
-        <div className="h-2/4 flex flex-col items-center">
+        <div className="w-2/4 flex flex-col items-center">
             <div className="pt-10">CHANGE PASSWORRD</div>
             <div className="pt-10">
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleChangePassword)}>
@@ -144,7 +144,7 @@ const UserChangeProfile = () => {
         }
     };
     return (
-        <div className="h-2/4 border-b-2 flex flex-col items-center gap-2 pt-10">
+        <div className="w-2/4 flex flex-col items-center gap-2 pt-10">
             <div>EDIT PROFILE</div>
             <div className="pt-10">
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleChangeProfile)}>

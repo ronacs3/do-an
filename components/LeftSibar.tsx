@@ -61,7 +61,6 @@ export default function LeftSibar() {
         <>
             {router.pathname === '/' && <HomeSibar />}
             {router.pathname === '/Board' && <BoardSibar />}
-            {router.pathname === '/User' && <UserSibar />}
         </>
     );
 }
