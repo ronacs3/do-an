@@ -180,7 +180,7 @@ const Device = ({ data, id }: device) => {
 
     const desiredBoardID = data.boardId;
     useEffect(() => {
-        socket.on('/wsn/sensors', async (sensor) => {
+        socket.on('/nhom9/sensors', async (sensor) => {
             const sensorlux = sensor.lux;
             if (sensor.boardId === desiredBoardID && data.auto != false) {
                 if (data.type === 'DEN') {
@@ -205,11 +205,6 @@ const Device = ({ data, id }: device) => {
 
                             if (res.success) {
                                 setActive(newState);
-                                // data.state = newState;
-                                // let message = {
-                                //     [id]: data.state,
-                                // };
-                                // socket.emit('/wsn/devices', JSON.stringify(message));
                                 console.log('oke');
                             }
                         } catch (error) {
@@ -236,11 +231,6 @@ const Device = ({ data, id }: device) => {
 
                             if (res.success) {
                                 setActive(newState);
-                                // data.state = newState;
-                                // let message = {
-                                //     [id]: data.state,
-                                // };
-                                // socket.emit('/wsn/devices', JSON.stringify(message));
                                 console.log('oke');
                             }
                         } catch (error) {
@@ -270,11 +260,6 @@ const Device = ({ data, id }: device) => {
 
                             if (res.success) {
                                 setActive(newState);
-                                // data.state = newState;
-                                // let message = {
-                                //     [id]: data.state,
-                                // };
-                                // socket.emit('/wsn/devices', JSON.stringify(message));
                                 console.log('oke');
                             }
                         } catch (error) {
@@ -301,11 +286,6 @@ const Device = ({ data, id }: device) => {
 
                             if (res.success) {
                                 setActive(newState);
-                                // data.state = newState;
-                                // let message = {
-                                //     [id]: data.state,
-                                // };
-                                // socket.emit('/wsn/devices', JSON.stringify(message));
                                 console.log('oke');
                             }
                         } catch (error) {
@@ -335,11 +315,6 @@ const Device = ({ data, id }: device) => {
 
                             if (res.success) {
                                 setActive(newState);
-                                // data.state = newState;
-                                // let message = {
-                                //     [id]: data.state,
-                                // };
-                                // socket.emit('/wsn/devices', JSON.stringify(message));
                                 console.log('oke');
                             }
                         } catch (error) {
@@ -366,11 +341,6 @@ const Device = ({ data, id }: device) => {
 
                             if (res.success) {
                                 setActive(newState);
-                                // data.state = newState;
-                                // let message = {
-                                //     [id]: data.state,
-                                // };
-                                // socket.emit('/wsn/devices', JSON.stringify(message));
                                 console.log('oke');
                             }
                         } catch (error) {

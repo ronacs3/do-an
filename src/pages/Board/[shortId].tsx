@@ -230,7 +230,7 @@ export default function BoardInfo() {
     const [value, setValue] = useState<SensorData>();
 
     useEffect(() => {
-        socket.on('/wsn/sensors', (data) => {
+        socket.on('/nhom9/sensors', (data) => {
             if (data.boardId === desiredBoardID) {
                 setValue(data);
             }
@@ -238,7 +238,7 @@ export default function BoardInfo() {
     }, [socket]);
     const [ssData, setData] = useState<any[]>([]);
     useEffect(() => {
-        socket.on('/wsn/sensors', (e) => {
+        socket.on('/nhom9/sensors', (e) => {
             if (e.boardId === desiredBoardID) {
                 setData((oldData) => {
                     const newData = [...oldData, e];
@@ -250,7 +250,7 @@ export default function BoardInfo() {
             }
         });
         return () => {
-            socket.off('/wsn/sensors');
+            socket.off('/nhom9/sensors');
         };
     }, [socket]);
     return (
@@ -267,15 +267,15 @@ export default function BoardInfo() {
                         <div className="flex flex-row justify-center gap-11 ">
                             <div className="rounded w-60 h-28 flex flex-col items-center bg-slate-700 gap-3 ">
                                 <div className="pt-4 font-normal text-xl">Temperatute</div>
-                                <div className="font-normal text-4xl">{formatString(value?.temp)} °C</div>
+                                <div className="font-normal text-4xl">{value?.temp}°C</div>
                             </div>
                             <div className="rounded w-60 h-28  flex flex-col items-center bg-slate-700 gap-3 ">
                                 <div className="pt-4 font-normal text-xl">Humidity</div>
-                                <div className="font-normal text-4xl">{formatString(value?.humi)} %</div>
+                                <div className="font-normal text-4xl">{value?.humi}%</div>
                             </div>
                             <div className="rounded w-60 h-28  flex flex-col items-center bg-slate-700 gap-3 ">
                                 <div className="pt-4 font-normal text-xl">Lux</div>
-                                <div className="font-normal text-4xl">{formatString(value?.lux)} Lux</div>
+                                <div className="font-normal text-4xl">{value?.lux} Lux</div>
                             </div>
                         </div>
                         {/* Chart */}

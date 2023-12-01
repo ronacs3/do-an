@@ -29,7 +29,7 @@ const BoardItem = ({ data }: BoardInfo) => {
     const [value, setValue] = useState<SensorData>();
 
     useEffect(() => {
-        socket.on('/wsn/sensors', (data) => {
+        socket.on('/nhom9/sensors', (data) => {
             if (data.boardId === desiredBoardID) {
                 setValue(data);
             }
