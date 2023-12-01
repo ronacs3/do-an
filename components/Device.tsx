@@ -178,174 +178,80 @@ const Device = ({ data, id }: device) => {
         }
     }, [selectedOperator]);
 
+    const onSubmit = async () => {
+        const token = localStorage.getItem('auth');
+        const newState = true;
+        try {
+            const response = await fetch(`http://localhost:8080/boards/${shortId}/devices/${data.id}/state`, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ state: newState }), // Send the new state
+            });
+
+            const res = await response.json();
+
+            if (res.success) {
+                setActive(newState);
+                console.log('oke');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const offSubmit = async () => {
+        const token = localStorage.getItem('auth');
+        const newState = false;
+        try {
+            const response = await fetch(`http://localhost:8080/boards/${shortId}/devices/${data.id}/state`, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ state: newState }), // Send the new state
+            });
+
+            const res = await response.json();
+
+            if (res.success) {
+                setActive(newState);
+                console.log('oke');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
     const desiredBoardID = data.boardId;
     useEffect(() => {
         socket.on('/nhom9/sensors', async (sensor) => {
             const sensorlux = sensor.lux;
+            const sensorhumi = sensor.humi;
+            const sensortemp = sensor.temp;
             if (sensor.boardId === desiredBoardID && data.auto != false) {
                 if (data.type === 'DEN') {
                     if (eval(`sensorlux ${selectedOperator} ${data.rule}`)) {
-                        const token = localStorage.getItem('auth');
-                        const newState = true;
-                        try {
-                            const response = await fetch(
-                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
-                                {
-                                    method: 'PUT',
-                                    headers: {
-                                        Accept: 'application/json',
-                                        Authorization: `Bearer ${token}`,
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({ state: newState }), // Send the new state
-                                },
-                            );
-
-                            const res = await response.json();
-
-                            if (res.success) {
-                                setActive(newState);
-                                console.log('oke');
-                            }
-                        } catch (error) {
-                            console.log(error);
-                        }
+                        onSubmit();
                     } else {
-                        const token = localStorage.getItem('auth');
-                        const newState = false;
-                        try {
-                            const response = await fetch(
-                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
-                                {
-                                    method: 'PUT',
-                                    headers: {
-                                        Accept: 'application/json',
-                                        Authorization: `Bearer ${token}`,
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({ state: newState }), // Send the new state
-                                },
-                            );
-
-                            const res = await response.json();
-
-                            if (res.success) {
-                                setActive(newState);
-                                console.log('oke');
-                            }
-                        } catch (error) {
-                            console.log(error);
-                        }
+                        offSubmit();
                     }
                 }
                 if (data.type === 'BOM') {
-                    if (sensor.humi < data.rule) {
-                        const token = localStorage.getItem('auth');
-                        const newState = true;
-                        try {
-                            const response = await fetch(
-                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
-                                {
-                                    method: 'PUT',
-                                    headers: {
-                                        Accept: 'application/json',
-                                        Authorization: `Bearer ${token}`,
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({ state: newState }), // Send the new state
-                                },
-                            );
-
-                            const res = await response.json();
-
-                            if (res.success) {
-                                setActive(newState);
-                                console.log('oke');
-                            }
-                        } catch (error) {
-                            console.log(error);
-                        }
+                    if (eval(`sensorhumi ${selectedOperator} ${data.rule}`)) {
+                        onSubmit();
                     } else {
-                        const token = localStorage.getItem('auth');
-                        const newState = false;
-                        try {
-                            const response = await fetch(
-                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
-                                {
-                                    method: 'PUT',
-                                    headers: {
-                                        Accept: 'application/json',
-                                        Authorization: `Bearer ${token}`,
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({ state: newState }), // Send the new state
-                                },
-                            );
-
-                            const res = await response.json();
-
-                            if (res.success) {
-                                setActive(newState);
-                                console.log('oke');
-                            }
-                        } catch (error) {
-                            console.log(error);
-                        }
+                        offSubmit();
                     }
                 }
                 if (data.type === 'QUAT') {
-                    if (sensor.temp < data.rule) {
-                        const token = localStorage.getItem('auth');
-                        const newState = true;
-                        try {
-                            const response = await fetch(
-                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
-                                {
-                                    method: 'PUT',
-                                    headers: {
-                                        Accept: 'application/json',
-                                        Authorization: `Bearer ${token}`,
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({ state: newState }), // Send the new state
-                                },
-                            );
-
-                            const res = await response.json();
-
-                            if (res.success) {
-                                setActive(newState);
-                                console.log('oke');
-                            }
-                        } catch (error) {
-                            console.log(error);
-                        }
+                    if (eval(`sensortemp ${selectedOperator} ${data.rule}`)) {
+                        onSubmit();
                     } else {
-                        const token = localStorage.getItem('auth');
-                        const newState = false;
-                        try {
-                            const response = await fetch(
-                                `http://localhost:8080/boards/${shortId}/devices/${data.id}/state`,
-                                {
-                                    method: 'PUT',
-                                    headers: {
-                                        Accept: 'application/json',
-                                        Authorization: `Bearer ${token}`,
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({ state: newState }), // Send the new state
-                                },
-                            );
-
-                            const res = await response.json();
-
-                            if (res.success) {
-                                setActive(newState);
-                                console.log('oke');
-                            }
-                        } catch (error) {
-                            console.log(error);
-                        }
+                        offSubmit();
                     }
                 }
             }
